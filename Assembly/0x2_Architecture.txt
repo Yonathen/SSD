@@ -1,0 +1,82 @@
+I. SWITCH, TRANSISTORS AND MEMORY
+====================================
+- Think about the switch 
+    - Switch it on stays on, switch it of it stays of
+    - Even the bulb is burns out, you can still look and tell whether the light 
+    is on or off by the position of the switch.
+    - In a sense the switch remembers what last command was until you change it
+    - That means light switch represents rudimentary memeory element
+    - In general Memory is an aggregate of switches that retain a pattern long
+    enough for that pattern to be read and understood by a person or a 
+    mechanism.
+    - Memory consists of containers for alterable patterns that retain an
+    entered pattern until someone or something alters the pattern.
+
+- Transistor switches
+    - Problem in the switch is that they require fingers to set them
+    - Ideally, a computer memeory switchs should be operated by same force.
+    - This type of switch is relay. Relay is a mechanical switch that is 
+    operated by electricity for the purpose of controlling electricity.
+    - you flip relay by feeding it a pulse of electricity.
+    - Fully electronic computers are made out of transistor switches.
+    - Transitors are tiny crystals of silcon that use the pecuilar electrical
+    properties of silicon to act as switches.
+                   +--------+
+                   |        |-------< Input
+     Select >------|    M   |
+                   |        |-------< Output
+                   +--------+
+    - Memory cell is a name given for transistor switch and its support 
+    components.
+    - The presence of voltage indicates a binary 1, and the lack of voltage 
+    indicates a binary 0
+    - A memory cell holds one binary digit either 1 or 0
+    - A bit is a single binary digit, either 1 or 0
+        - is an indivisible atom of information
+- Shrinking bit
+    - One bit doest tell much. We need to bring a lot of memory cells together.
+    - The size of the cristal cip hasnt changed outrageously since its first 
+    creation but transistors themselves have shrunk almost incredibly.
+    - In the begining on chip held one transistor, in time semiconductor 
+    designers criscrossed the chip into four equal areas and made each area 
+    independent transistors. 
+    - Then the shrinking process began First 8 bits then 16 bits all the same 
+    tiny silcon chip and by late 1960's 256 memory cels could occupy on silcon
+    chip.
+    - Now cyou can purchase this little plug-in circute board memory module
+    with as much as 2 gigabytes as much as 16 billion bits.
+- Random Access
+    - What the word Random indicates is that you can reach into a random-access 
+    memory and pick out an of the bits it contains without disturbing the others
+    - Works like this:
+        - Inside the chip each bit is stored in its own memory cell
+        - Each of the memory cells has a unique number
+        - This number is a cell address
+    - Each chip has number of pins coming out of it.
+        - The bulk of this pins are called address pins
+            - The address is a binary number, expressed in 1s an 0s only
+        - One pin is the data pin
+            - Depending on whether you want to read or write the data pin is 
+            switched.
+    - Look on fig 3.2 on page 53
+- Bytes, Words. Double Words and Quad Words
+    - 1 byte = 8 bits side by side
+    - 1 Word = 2 bytes side by side = 16 bits
+    - 1 double word = 2 words side by side = 32 bits
+    - 1 quad word = 2 double words side by side = 64 bits
+    - Every byte memory has its own unique address 
+    - When 32-bit computers access a byte it actually reads 4 byts statrting 
+    of the requested byte. You can use the remaining 3 bytes or ignore.
+    - If you ignore the 3 bytes, then you will have to access memeory again.
+- Centeral Processing Unit (CPU)
+    - But who is going doing the reading and writing operations on the memory.
+        - Its a single chip called CPU
+    - If you are the president and the CEO of your computer
+        - CPU is the shop forman, who sess that your orders are carried out 
+        down among the chips, where the work gets done.
+    - Other than CPU plenty of work is done in memory system and peripherals
+        (peripherals are USB, display board, and network ports)
+    - While the CPU does good deal of work it also delegates.
+
+    ... Continue Later
+
