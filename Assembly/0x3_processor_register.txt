@@ -1,0 +1,59 @@
+- 32-Bit Registers
+    - General-Purpose Registers
+        - Data Registers (EAX, EBX, ECX, EDX)
+            - EAX : primary accumulator
+                - used in input/output
+                - arthimetic
+            - EBX : known as base Registers
+                - used in indexed addressing
+            - ECX : known as count Registers
+                - start loop count in iterative operations
+            - EDX : known as data register
+                - used for multiply and divide operations involving large 
+                numbers
+        - Pointer Registers (EIP, EBP, ESP)
+            - IP : stores the offset address of the next instruction in 
+            association with CS register.
+            - SP : in association with SS register refers to current 
+            position of data or address with in the program stack.
+            - BP : helps in referenceing parameter variables passed to a 
+            subroutine.
+        - Index Registers (ESI, EDI)
+            - SI : It is used as source index for string operations.
+            - DI : used as destinationn index for string operations.
+    - Control Registers
+        - Overflow Flag (OF) : indicates the overflow of high order bit
+        - Direction Flag (DF) : determines the left or right direction 
+        for moving or comparing string data.
+            0 : left to right
+            1 : right to left
+        - Interrupt Flag (IF) : determines whether the external interrupts
+        like keyboard entry , etc., are to be ignored or processed.
+        - Trap Flag (TF) : Allows setting the operation of the processor
+        in single-step mode. DEBUG program used to set trap flag.
+        - Sign Flag (SF) : Shows sign of the result of an arthmetic 
+        operation. 0 : postive; 1 : negative
+        - Zero Flag (ZF) : Indicates the result of arthimetic operation
+        0 : non-zero result; 1 : zero result
+        - Auxiliary Flag (AF) :  conatains cary from bit 3 to bit 4
+        - Parity Flag (PF) : indicates total number of 1-bits in the result
+        obtained from arthimetic operation. 0 : even; 1 : odd
+        - Carry Flag (CF) : indicates the carry of 0 or 1 from higher order
+        bit (leftmost) after an arthimetic operation. 
+    - Segment Registers
+        - Code Segment (CS) : Contains all instruction to be executed
+            - CS register contains the starting addess of code segment.
+        - Data Segment (DS) : Contains data, constants and work areas.
+            - DS register stores the starting address of data segment.
+        - Stack Segment (SS) : Contains data and return address of a 
+        procedures or subroutines.
+            - SS register stores the starting address of the stack.
+        - External Segment (ES) : Spare segment that may be used for 
+        specifying a location in memory.
+
+- The Three Major Assembly Programming Models
+    - Real Mode Flat Model : Fig 4-8 page 98
+    - Real Mode Segmented Model : Fig 4-9 page 100
+    - Protected Mode Flat Model : Fig 4-10 page 103
+
+- 

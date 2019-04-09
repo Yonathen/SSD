@@ -78,5 +78,122 @@ I. SWITCH, TRANSISTORS AND MEMORY
         (peripherals are USB, display board, and network ports)
     - While the CPU does good deal of work it also delegates.
 
-    ... Continue Later
+- Talking to memory
+    - Like memory chips CPU has a number of pins devoted for memory addressing
+    - This pins are connected to the computer system memory.
+    - Loog for fig 3-4 on page 59
+    - Other than between the information flows between CPU and memory it also 
+    flow in other paths such us periferals
+    - This conversations takes place across the electrical connections linking 
+    the address pins and data pins that all devices in the computer have in 
+    common.
+    - This electrical lines are called data bus 
+- The Forman's Pocket
+    - Evey CPU contains a very few data sorages cubbyholes called registers.
+    - This registers are at once a formans pocket and formans workbench.
+    - CPU could always store the data out in memory, but that takes 
+    considerably more time than tucking data out in register.
+    - Like memory cells registers are made out of transistors, but rather than
+    having nummeric address registers have individual names like EAX or EDI
+    - CPU's work in progress is held in temporary storage containers called 
+    registers.
+- Fetch and Execute
+    - A computer program is a table of machin instructions stored in memory.
+    - The table can be stored anywhere in the memory
+    - The bytes in the table are binary.
+    - The bynary numbers comprising the programs are special only in the 
+    way the CPU treats them.
+        - modern 32bit CPU begins running by fetching double word (4 bytes)
+        - CPU examins the pattern of binary bits in the double word and 
+        begins performing the task.
+        - As soon as it finish executing CPU goes out to memory and fetches 
+        the next machin instructions.
+        - Inside the CPU there is Instruction pointer that quite literally 
+        contains the address of the next instruction.
+        - Each time instruction is completed Instruction pointer is updated.
+        - So the process continues fetch and executes; fetch and executes;...
+
+- Enter the Plant Manager (Operating System)
+    - If CPU was the shop formand, then operating system is the plant manager
+    whose entire physical plant is under his control. overseeing bringing 
+    raw marterial in to the plant and shipment of finsished products.
+    - Operating systems is a program that manages the operation of the 
+    computer system.
+- BIOS (Basic Input / Output System)
+    - IBM had taken the program code that handled the keyboard, the display,
+    and the disk drives and burned it into a special kind of memory chip 
+    called Read-Only Memory (ROM).
+    - Unlike RAM, ROM retains its data wheter it has power or not.
+    - The software on ROM was called BIOS because it handles computer inputs
+    and outpus ( display, printer).
+    - Somewhere along the ways, software like the BIOS, which existed on 
+    non-volatile ROM chips, was nicknamed fireware
+    - Because although it was still software, it was not quite as well soft
+    as software stored in memory or disk
+Multitasking Magic
+    - Modern CPU works as a rotary switch
+        - The rotor tuns continously and touches each several cantacts in 
+        the sequence, once per revolution.
+        - Each time it touches the contact for one of the programs, that
+        program is allowed to run.
+        - When the rotor moves to the next contact the previus stops in its 
+        tracks and the next program gets little time to run.
+        - OS cand define priority for each program on the list so that 
+        some get more time to run than others.
+Promotion to Kernel
+    - Linux had better handling of multitasking and had more powerful 
+    structure. 
+    - The core of linux was a block of code called Kernel, which took full 
+    advantage of IA-32 protected mode.
+    - Linux kernel is entirly separated from the user interface and protected
+    from damage due to malfunctioning programs else where in the system
+    - System memory was tagged as either kernel space or user space.
+    - Nothing running on user space could write to anything stored in kernel space
+
+                   +-------------------+
+                   |    Memory         |
+                   +-------------------+
+                   |                   |
+                   |                   |
+                   | +---------------+ |
+                   | |  Your Program | |
+                   | +---------------+ |
+                   | +---------------+ | The graphical
+                   | |               | | shell, plus all
+                   | |               | | ordinary
+                   | | User-Interface| | applications
+                   | |     Shell     | | (Web browsers,
+                   | |               | | editors etc) 
+                   | |               | | run in user 
+                   | +---------------+ | space
+                   +-------------------+-----------
+                   | +---------------+ |
+                   | | Display Driver|-|---> Screen
+                   | +---------------+ |
+                   | +---------------+ |
+                   | | Hard Disk     | |
+                   | | Driver        |-|----> Hard Disk
+                   | +---------------+ |
+                   | +---------------+ | 
+                   | |               | | Everything in here
+                   | |               | | runs in "kernel 
+                   | |     Kernel    | | space" and has 
+                   | |               | | special privileges
+                   | |               | | and protections.
+                   | |               | |
+                   | +---------------+ |
+                   +-------------------+-------------
+
+
+- The Core Explosion 
+    - Windows 2000/XP/Vista/7 and Linux support the use of multiple CPU
+    chips in a single system, through a mechanism called symmetric 
+    multiprocessing(SMP)
+    - Multiprocessing is symmetric when all the processes are the same.
+    - In most cases, When two CPUs are avaialbel, the operating system runs 
+    its own code in one CPU, and user-mode applications are run in the other.
+    - As technology improves Intel and AMD were able to place two identical
+    but entirely independent code execution units on a single chip.
+    The result was first dual-core CPUs.
+
 

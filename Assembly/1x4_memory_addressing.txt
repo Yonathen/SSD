@@ -1,0 +1,81 @@
+- Source and destination operands
+    - When an instruction requires two operands
+        - First is destination
+        - Second is source.
+- Immediate Addressing
+    - Gets its name from the fact that the item being addressed is data built 
+    right into the machine instruction.
+    - CPU does not have to go anywhere to find the data.
+    - Immediate data is always right inside the instruction being fetched and
+    executed.
+    - Examples
+        ADD EAX, 3
+        MOV AH, 00
+        MOV EAX, 0ABCDFFFFH
+        MOV AX, 302
+        MOV AX, -40
+        MOV EAX, 'WXYZ'
+- Register Addressing
+    - Data stored in register is called Register Data
+    - Accessind register data directely is an addressing mode called 
+    Register Addressing.
+        - It is done by simply nameing the register you wnat to access
+            mov ebp, esi
+            sub ebx, ebx
+            xor eax, eax
+- Register indirect addressing mode
+    mov al, [bp]
+                   +---------+
+                 .>|---------|---> al
+                 | |---------|
+          +----+ | |---------|
+          | BP |-+-|---------|
+          +----+ | |---------|
+    +----+       | |---------|
+    | SS |-------->|---------|
+    +----+         +---------+
+- Register relative addressing mode
+    mov al, [bp+d]
+                   +---------+
+                 .>|---------|---> al
+                 | |---------|
+                 | |---------|
+               d + |---------|
+          +----+ | |---------|
+          | BP |-+-|---------|
+          +----+ | |---------|
+    +----+       | |---------|
+    | SS |-------->|---------|
+    +----+         +---------+
+- Base indexed mode
+    mov al, [bp+si]
+                   +---------+
+                 .>|---------|---> al
+          +----+ | |---------|
+          | SI |-+-|---------|
+          +----+ | |---------|
+          +----+ | |---------|
+          | BP |-+-|---------|
+          +----+ | |---------|
+    +----+       | |---------|
+    | SS |-------->|---------|
+    +----+         +---------+
+- Base relative indexed mode
+    mov al, [bp+si+d]
+                   +---------+
+                 .>|---------|---> al
+                 | |---------|
+                 | |---------|
+               d + |---------|
+          +----+ | |---------|
+          | SI |-+-|---------|
+          +----+ | |---------|
+          +----+ | |---------|
+          | BP |-+-|---------|
+          +----+ | |---------|
+    +----+       | |---------|
+    | SS |-------->|---------|
+    +----+         +---------+
+- At the current evaluation of x86 hardware, 2 registers may be added 
+together to form effective address but not 3 or more.
+
