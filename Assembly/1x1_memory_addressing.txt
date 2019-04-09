@@ -78,4 +78,43 @@
     +----+         +---------+
 - At the current evaluation of x86 hardware, 2 registers may be added 
 together to form effective address but not 3 or more.
+- Confusing data and its address
+    - Consider the following
+        EatMsg: db "Eat at Joe's"
+        . . .
+        mov ecx, EatMsg
+        - In a high-level language, whatever data is stored in EatMsg
+        it will be transfered into ECX.
+        - But thats not the case in Assembly, the mov instruction
+        actually copies the address of EatMsg, not whats stored in EatMsg.
+        - In Assembly variables represent address not data
+        - so how do you get the data?
+            mov edx, [EatMsg] ; 'E' 'a' 't' and ' ' will be moved to edx 
+            - What the above instruction does is go out to the location
+            in memory specified by the address represented by EatMsg, pull 
+            the first 32 bits' worth of data from that address load that
+            data into EDX starting with least significant byte in EDX
+- Size of memory data
+    - Consider the following
+        EatMsg: db "Eat at Joe's"
+        - What if you only want to work with a single character?
+            mov al, [EatMsg] ; only E will be moved to al
+            - since al is one byte (8 bits), by using al you can bring
+            the first byte of EatMsg
+            - If you want to refer the lower 2 bytes (16 bits) use AX 
+                mov ax, [EatMsg] ; E and a will be moved to ax
+    - Size issue gets tricky when you want to trandsfer data in register to a
+    memory. 
+        - NASM does not remember the size of variables as high-level language
+        - Knows where EatMsg starts in memory and thats it
+        - You have to tell nasm how many bytes of data to move.
+        - This is done by size specifiers
+            move [EatMsg], byte 'G'
+            - In here you are telling nasm that you only want to move single 
+            byte out to EatMsg
+            - Other size specifiers
+                - WORD
+                - DWORD
+        
+            
 
