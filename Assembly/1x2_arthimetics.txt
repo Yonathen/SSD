@@ -1,0 +1,248 @@
+
+- Signed and unsigned values
+    - Signed values are those that can become negative
+    - Unsigned are always positve
+    - CPU puts a single bit to differncate negative and positive
+        - The highest bit in the most significant byte of a signed value is 
+        the sign bit. 
+            - 1-bit : number is negative
+            - 0-bit : number is positve
+        - This condition holds only if we are using signed value
+        - If you dont need to perform signed arthimetic, the high bit
+        of a register value or memory considered the sign bit.
+        - For example consider 10101111 
+            - If you need to treat the value as signed, you treat the high-order
+            as sign bit and the value is -81.
+            - If you treat the value as unsigned, you treat the high beat as
+            just another digit in a binary number and the value is 175.
+    - Two's complement and NEG 
+        - You cant simply take the value 42 and make it -42 by setting 
+        sign bit to 1.
+            - The value will certainly become negative but will not be -42
+        - To get the negative value of a number you should calculate the 
+        two's complement. To do that
+            - Reveverse it's bit value 
+            - Add value 1
+        - Example
+            53              = 00110101
+            Reverse of 53   = 11001010
+            Add one         = 11001011 = -53
+    - The good news is you dont have to calculate two's complement manually
+    in assembly. The NEG instruction will take the value and negate it.
+        mov eax, 42
+        neg eax
+    - Now the question is what are the largest negative and postive numbers
+        +-----------------------------------------------------+
+        | Value Size | Greatest -ve      | Greatest +ve       |
+        +------------|-------------------|--------------------+
+        | 8 bits     | D : -128          | D : 127            |
+        |            | H : 80h           | H : 7Fh            |
+        |------------|-------------------|--------------------|
+        | 16 bits    | D : -32768        | D : 32767          |
+        |            | H : 8000h         | H ; 7FFFh          |
+        |------------|-------------------|--------------------|
+        | 32 bits    | D : −2147483648   | D : 2147483647     |
+        |            | H : 80000000h     | H ; 7FFFFFFFh      |
+        +-----------------------------------------------------+
+
+    - 32 bits number
+        +---------------------------------------------------------+
+        | binary    | Hex      | Signed          | Unsigned       |
+        +-----------|----------|-----------------|----------------+
+        | 000..0000 | 00000000 | 0               | 0              |
+        |-----------|----------|-----------------|----------------|
+        | 000..0001 | 00000001 | 0               | 0              |
+        |-----------|----------|-----------------|----------------|
+        | ......... | ........ | ..              | ..             |
+        |-----------|----------|-----------------|----------------|
+        | 011..1101 | 68AFE10D | 1756356877      | 1756356877     |
+        |-----------|----------|-----------------|----------------|
+        | ......... | ........ | ..              | ..             |
+        |-----------|----------|-----------------|----------------|
+        | 011..1111 | 7FFFFFFF | 2147488647      | 2147488647     |
+        |-----------|----------|-----------------|----------------|
+        | 100..0000 | 80000000 | -2147488648     | 2147488648     |
+        |-----------|----------|-----------------|----------------|
+        | 100..0000 | 80000000 | -2147488647     | 2147488649     |
+        |-----------|----------|-----------------|----------------|
+        | ......... | ........ | ..              | ..             |
+        |-----------|----------|-----------------|----------------|
+        | 100..0011 | 97501EF3 | -1756356877     | 2538610419     |
+        |-----------|----------|-----------------|----------------|
+        | ......... | ........ | ..              | ..             |
+        |-----------|----------|-----------------|----------------|
+        | 111..1111 | FFFFFFFF | -1              | 4294967295     |
+        +---------------------------------------------------------+
+- Increment and decrement
+    inc <operand>
+    dec <operand>
+
+- Sign extension and MOVSX
+    - What happens if you need to move a signed 16-bit value into 32-bit register
+        mov ax, -42
+        mov ebx, eax
+        - The hexadecimal form of -42 is 0FFD6h 
+        - If you have to move the value to 32-bit register like ebx the sign
+        bit will no longer be the sign bit.
+        - That is, once -42 travels from 16-bit container into 32-bit container
+        it changes from -42 to 65494. The sign bit is still there it hasnt been
+        cleared to zero but its been treated as another bit value.
+        - NB that however we cant mov AX into EBX because MOV instruction doesnt
+        allow opperands of different size. But its also true that AX is just
+        the lower two bytes of EAX. So we can move EAX into EBX by moving EAX
+        into EBX.
+    - x86 CPU provides us a way out of this trap in the form of MOVSX 
+    instruction. 
+        - MOVSX means "Move with Sign Extension" 
+        - MOVSX not present in 8086/8088 CPUs
+        - MOVSX was introduced with 386 family of CPU
+        - Since Linux will not run on anything older than 386, you can assume
+        that linux PC supports the MOVSX instruction.
+        - example
+            mov ax, -42
+            movsx ebx, ax
+            - When you move AX into EBX with MOVSX, the MOVSX instruction 
+            performs sign extension on its operands
+                - take the sign bit from the 16 bit quantity in AX
+                - Making it the sign bit of the 32-bit quantity in EBX
+        
+        - MOVSX instruction usage 
+            movsx <r16>, <r/m8>  ; 8-bit signed to 16-bit signed
+            movsx <r32>, <r/m8>  ; 8-bit signed to 32-bit signed
+            movsx <r32>, <r/m16> ; 16-bit signed to 32-bit signed
+            - Note that destination can only be register.
+- Implicit operands and MUL 
+    - Most of the time, you hand values to machine instruction through
+    one or two operands placed right there on the line beside the mnemonic.
+    - however, there are some instructions that act on registers or even
+    memory that is not stated in a list of operands. 
+        - These instructions have operands, but they represent assumptions
+        made by the instructions. Such operands are called implicit.
+        - They do not change and can not be changed.
+        - Most instructions that have implicit operands have explicit operands
+        as well.
+        - Example of this instructions in x86 are 
+            - MUL, DIV : for unsigned calculation
+            - IMUL, IDIV : for signed calculation
+    - MUL instruction
+        - multiply two values and return products
+        - generates output value hugely larger than the input value.
+            - this makes it impossible to follow the conventional pattern
+            in x86 instruction, whereby the value generated goes into 
+            the destination operand.
+            - consider the largest unsigned integer 4294967295 and multiply
+            it by 2 and you get 33-bit product which will no longer fit in 
+            32-bit register.
+            - The largest products of two binary numbers can be expressed in
+            no more than twice the number of bits required by the larger 
+            factors. Therefore, while two registers may be needed to hold the 
+            product, no more than two registers will ever be needed.
+                - Any product of 16-bit values will fit 32-bits
+                - Any product of 32-bits vallue will fit 64-bit
+        - It takes only one operand, which contains one of the factors to be 
+        multiplied. The other factos is implicit, as is the pair of registers
+        that receives the product calculation. 
+            - example
+                mul ebx
+        - mul Explicit (Factor1) : r/m8
+                Implicit (Factor2) : AL 
+                Implicit (Product) : AX
+        - mul Explicit (Factor1) : r/m16
+                Implicit (Factor2) : Ax 
+                Implicit (Product) : DX and AX
+        - mul Explicit (Factor1) : r/m32
+                Implicit (Factor2) : EAx 
+                Implicit (Product) : EDX and EAX
+        - The second factor is implicit and always in "A" general-purpose
+        register appropriate to the size of the first factor.
+            - If the first factor is 8-bit, second factor is always in 
+            8-bit register.
+        - Once the product requires more than 16 bits, the "D" register is
+        drafted to hold the high order portion of the product.
+            - the high order refers to the portion of the product that 
+            wont fit in the "A" register.
+                - If for example the produc is 02A456Fh, then
+                    - AX will contain 0456Fh 
+                    - DX will contain 02Ah 
+            - NB even when the produc is small enough to fit in the 
+            first two register holding the product, the high order 
+            register (AH, DX, or EDX) is zerroed out.
+                - So you cant use high-order register for anything else
+                while a mul instruction is executed no matter how small is
+                you product.
+            - immediate operand can not be used as operands for mul
+                mul 42 ; Illegal 
+            - most times 32 bits are more than enough to hold the product
+            So how can you know if there are significant figures in the 
+            higher-order register?
+                - Mul very helpefully set the carry flag (CF) when the 
+                product overflows the low-order register.
+                    - If, after mul you find CF set to 0 you can ignore
+                    the high order register, secure in the knowledge
+                    that the entire product is in the lower order of the
+                    two registers
+                    - For example
+                        mov eax, 447
+                        mov ebx, 1739
+                        mul ebx
+                        - EAX contains 777333
+                        - EDX contains 0
+                        - CF has been cleared to 0
+- Unsigned Division with DIV
+    - Divide and gives you the quotient and a remainder
+    - In hear we deal with integer only. for decimal quotients like 17.9
+    we require "floating point" machinery on the math processor side of the
+    x86 architecture.
+    - div Explicit (Divisior) : r/m8
+            Implicit (Quotient) : AL
+            Implicit (Remainder) : AH
+    
+    - div Explicit (Divisior) : r/m16
+            Implicit (Quotient) : AX
+            Implicit (Remainder) : DX
+    
+    - div Explicit (Divisior) : r/m32
+            Implicit (Quotient) : EAX
+            Implicit (Remainder) : EDX
+
+- Addition with ADD
+    - syntax : add <destination>, <source>
+    - semanitics : destination = destination + source
+        add <reg>, <reg>
+        add <reg>, <mem>
+        add <mem>, <reg>
+        add <reg>, <reg>
+        add <mem>, <con>
+    - Let num1 and num2 recived from user input
+        mov eax, [num1]
+        sub eax, '0'
+        - move the first number to eax and subtract ascii '0'
+        to convert into decimal from ascii
+        - do the same for num2 by moving it to ebx first
+
+        add eax, ebx
+        add eax, 0
+        - add eax and ebx then store the result in eax
+        - add '0' to convert it to ascii from decimal
+- Subtraction using SUB 
+    - syntax : sub <destination>, <source>
+    - semanitics : destination = destination - source
+        sub <reg>, <reg>
+        sub <reg>, <mem>
+        sub <mem>, <reg>
+        sub <reg>, <reg>
+        sub <mem>, <con>
+    - Let num1 and num2 recived from user input
+        mov eax, [num1]
+        add eax, '0'
+        - move the first number to eax and add ascii '0'
+        to convert into decimal from ascii
+        - do the same for num2 by moving it to ebx first
+
+        sub eax, ebx
+        sub eax, 0
+        - sub eax and ebx then store the result in eax
+        - sub '0' to convert it to ascii from decimal
+        
+                
+

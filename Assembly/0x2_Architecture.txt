@@ -196,4 +196,32 @@ Promotion to Kernel
     but entirely independent code execution units on a single chip.
     The result was first dual-core CPUs.
 
-
+                                        +-----------+   +-----------+
+                                        |           |   |           |
+                                        |   .0      |   |   .0      |
+                                        |           |   |           |
+                                        +-----------+   +-----------+
+                                        Previously assembled modules
+                                                                |
+                      No Errors +-----------+                   |
+                        +------>|           |---------------+   |
+                        |       |   .0      |               |   |
+                        |       |           |               |   |
+                        |       +-----------+               |   |
+                        |             |                     |   |
+                    +-------+         |                     |   |
+            Source  |       |         |                     V   V
+            File    | .ASM  |         |                 +--------------+
+                    |       |         |                 |     | Linker |
+                    +-------+         |        +--------|     +--------|
+                        ^             |        |        |              |
+                        |             |        |        +--------------+
+                    +----------+      |        |                |
+                    | Editor   |<-----+        |                V
+                    |          |<--------------+       +-----------------+
+                    +----------+                       |  Executable     |
+                        ^   ^                          +-----------------+
+                        |   |         +------------+           |    |
+                    Start   +---------| Debugger   |-----------+    V
+                    Here              +------------+                Works
+                                                                    Perfectly

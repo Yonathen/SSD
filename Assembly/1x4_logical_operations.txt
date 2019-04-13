@@ -1,0 +1,82 @@
+- Bits is Bits ( and Bytes is Bits)
+    - Bits, after all, are what bytes are made of.
+    - One essential assembly language skill is building bytes and 
+    taking them apart again.
+        - This technique is called bit mapping.
+    - There is a family of instructions in the x86 architecture that enables
+    you to manipulate the bits with in bytes.
+        - These is done by applying boolean logic operations between bytes
+        on a bit-by-bit basis.
+            - These are bitwise logical instructions
+                (AND, OR, XOR, NOT)
+        - Another family of instructions enables you to slide bits back and
+        forth with in a single byte or word.
+            - These are shift/rotate instructions
+                (ROL, ROR, RCL, RCR, SHL, SHR)
+- Bit numbering
+    - Dealing with bits requires that we have a way of specifying which we 
+    are dealing with.
+
+        +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+        |15|14|13|12|11|10|9 |8 |7 |6 |5 |4 |3 |2 |1 |0 |
+        +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    Most significant bit                         Least significant bit
+- AND instructions
+    - 0 AND 0 > 0
+    - 1 AND 0 > 0
+    - 0 AND 1 > 0
+    - 1 AND 1 > 1
+    - syntax : and <destination>, <source>
+    - example :
+        and al, bl
+        - here the CPU will perform eight bitwise AND operation
+    - Major advantage of AND instructions is to isolate one or more bits
+    out of abyte value or word value. 
+        - Isolate means to set all unwanted bits to a reniable 0
+        - Suppose we are interested in testing bits 4 and 5 
+            - We have to be able to ignore
+                - 0 through 3
+                - 6 through 7
+            - We must set up a bit mask in which the numbers we want to 
+            inspect are set to 1 and the numbers we want to ignore set to 0
+                - 00110000B or 30H is the mask 
+    - Clearing a bit
+        and ah, 01111111B
+            - this will clear (set to 0) bit 7 of AH leaving others 
+            unchanged.
+
+- OR instructions
+    - 0 OR 0 > 0
+    - 1 OR 0 > 1
+    - 0 OR 1 > 1
+    - 1 OR 1 > 1
+    - OR is used much more rarely since its not suitable for isonalting bits.
+    - Converting Data
+        - let dl contains 0-9
+            or dl, 00110000B
+            - dl now contains '0'-'9'
+            - setting bits 4 and 5 will turn a digit value to ascII
+
+        - let ah contains letter ('a'-'z' and 'A'-'Z')
+            or AH, 00100000b
+            - ah now lowercase
+            - upper and lowercasecharacters differ only in 5th bit
+- XOR instructions
+    - 0 XOR 0 > 0
+    - 1 XOR 0 > 1
+    - 0 XOR 1 > 1
+    - 1 XOR 1 > 0
+    - syntax: xor eax, eax
+    - used for clearing
+- NOT instructions
+    - 0 NOT > 1
+    - 1 NOT > 0
+- Shifting bits
+    - shift bits to one side or the other
+    - syntax : 
+        - shl <reg/mem>, <count> 
+            - shift to left the bits in  <reg/mem> by <count> amount
+        - shr <reg/mem>, <count> 
+            - shift to right the bits in  <reg/mem> by <count> amount
+
+    - 

@@ -1,0 +1,140 @@
+- Bones of an Assembly Language Program
+    - .bss
+        - contains data items that doesnt need to have values before the program
+        begins running.
+        - data defined in this section does not add to the size of the executable.
+            - you can define a buffer that takes up to 16,000 bytes and almost 
+            nothing (about 50 bytes for the discription) to the executable 
+            file size.
+        - This is possible because of the way the Linux loader brings the program
+        into memory. When you build your executable file
+            - Linux linker adds information to the file descibing all symbols 
+            you have defined.
+            - Loader knows which data item do not have initial values and it 
+            allocates space in memory for them when it brings the executable in from
+            disk.
+
+    - .text
+        - The actual machine instruction
+    - .data
+        - contains data defnitions of initialized data items
+        - initialized data is data that has values.
+        - This values are part of the executable file.
+        - They are loaded into memory when the executable is loaded into memory 
+        for execution.
+        - The more initialized data items you define the larger your executable 
+        file will be and longer it will take to load from disk into memory.
+
+        ; Building commands
+        ;   nasm -f elf -g -F stabs eatsyscall.asm
+        ;   ld -o eatsyscall eatsyscall.o
+        SECTION .data
+            EatMsg: db "Eat at Joe's!", 10
+            EatLen: equ $-EatMsg
+        SECTION .bss
+
+        SECTION .text
+
+        global _start
+            
+        _start:
+            nop
+            
+            mov eax, 4
+            mov ebx, 1
+            mov ecx, EatMsg
+            mov edx, EatLen
+            int 80h
+
+            mov eax, 1
+            mov ebx, 0
+            int 80h
+
+
+- Sequence of executon
+                                        +-----------+   +-----------+
+                                        |           |   |           |
+                                        |   .0      |   |   .0      |
+                                        |           |   |           |
+                                        +-----------+   +-----------+
+                                        Previously assembled modules
+                                                                |
+                      No Errors +-----------+                   |
+                        +------>|           |---------------+   |
+                        |       |   .0      |               |   |
+                        |       |           |               |   |
+                        |       +-----------+               |   |
+                        |             |                     |   |
+                    +-------+         |                     |   |
+            Source  |       |         |                     V   V
+            File    | .ASM  |         |                 +--------------+
+                    |       |         |                 |     | Linker |
+                    +-------+         |        +--------|     +--------|
+                        ^             |        |        |              |
+                        |             |        |        +--------------+
+                    +----------+      |        |                |
+                    | Editor   |<-----+        |                V
+                    |          |<--------------+       +-----------------+
+                    +----------+                       |  Executable     |
+                        ^   ^                          +-----------------+
+                        |   |         +------------+           |    |
+                    Start   +---------| Debugger   |-----------+    V
+                    Here              +------------+                Works
+                                                                    Perfectly
+- variables for initialized data
+    - A variable is defined by assosciating an identifier with data defnition
+    directive.
+    - Data definition directives 
+        MyByte db 07h ; 8 bits in size
+        MyWord dw 0FFFFh ; 16 bits in size
+        MyDouble dd 0B8000000h ; 32 bits in size
+
+- String variables
+    - string is a sequence of characters all in a row in memory.
+        EatMsg: db "Eat at Joe's!", 10
+    - There is a slight differece on the way the data defnition directive
+    sets asside a particular quantity of memory.
+        - DB directive ordinarily sets aside one byte only.
+        - But a string may be any length you like.
+        - Therefore, strings are simply defined by associating a label with the
+        place where the string starts. 
+            - In our case EatMsg.
+        - DB directive specifies one byte in memory as the string's starting
+        point. 
+        - The number of characters in the string is what tells the assembler
+        how many bytes of storage to set aside for that string.
+        - Either single quote or double quote used dlinate a string.
+    - you may combine several separate substrings into a single string variable
+    by separating the substring with commas.
+        TwoLineMsg: db "Eat at Joe's...",10,"...ten million files ...",10
+        - The number 10 used indicates end-of-line (EOL) character in Linux
+        text work.
+        - The above TwoLineMsg will be displayed as follows
+            Eat at Joe's!
+            ten million files
+        - You can append individual numbers with in a string 
+            - A number appended to a string will be interpreted by most OS
+            routines as an ASCII character.
+            - to show numbers in a string you must represet them as a 
+            character literals, like "7" or as numberic equivalents to 
+            askII characters like 37h
+- EQU (equate)
+    - consider the following
+        FieldWidth equ 10
+        - The above tells the assembler that the label FieldWidth stands for 
+        the numeric value 10.
+        - Once equate defined the following two are equal
+            mov eax, 10
+            mov eax, FieldWidth
+        - Two advantages
+            - understandability since it's discriptive
+            - easier to change since you only need to change one place
+    - Consider the following
+        EatLen: equ $-EatMsg
+        - in assembly $ marks the spot where nasm is in the intermediate file.
+        - EatMsg holds the start of the string
+        - Therefore, EatLen will be the length of the string.
+        
+        
+
+

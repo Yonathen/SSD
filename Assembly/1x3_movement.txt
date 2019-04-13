@@ -1,0 +1,45 @@
+- Push Instruction
+    - places its operands (reg/mem)into the top of the stack
+        - first decrement ESP by 4
+        - place the operand on the contetnts of the location pointed by ESP
+    
+        pushf 
+            - Push the Flags register
+        pusha 
+            - Push AX, CX, DX, BX, SP, BP, SI, and DI, in that order, 
+            all at once
+        pushad 
+            - Push EAX, ECX, EDX, EBX, ESP, ESP, EBP, ESI, and EDI, 
+            all at once
+        push ax 
+            - Push the AX register
+        push eax 
+            - Push the EAX register
+        push [bx] 
+            - Push the word stored in memory at BX
+        push [edx] 
+            - Push the doubleword in memory at EDX
+        push edi 
+            - Push the EDI register
+- Pop Instruction
+    - removes the 4byte data element from the top of the stack
+        pop <reg/mem>
+
+        popf 
+            - Pop the top 2 bytes from the stack into Flags
+        popa 
+            - Pop the top 16 bytes from the stack into AX, CX, DX, BX,
+             BP, SI, and DI...but NOT SP!
+        popad 
+            - Pop the top 32 bytes from the stack into EAX, ECX, EDX, EBX,
+            EBP, ESI and EDI...but NOT ESP!!!
+        pop cx 
+            - Pop the top 2 bytes from the stack into CX
+        pop esi 
+            - Pop the top 4 bytes from the stack into ESI
+        pop [ebx] 
+            - Pop the top 4 bytes from the stack into memory at EBX
+- xchg Instruction  
+    - used to exchange 8-, 16- or 32- bit source and destination
+        xchg eax, ecx
+        xchg [res], cl

@@ -1,0 +1,78 @@
+- Conditional Jumps abd (cmp operator)
+    - cmp is a comparison operator  
+        - updates one or more arthimetic flags
+        - syntax
+            cmp <reg>, <reg/mem/con>
+            cmp <mem>, <reg>
+    - Coditional jumps 
+        - je : jump if equal
+        - jne : jump if not equal
+        - jl : jump if less than
+        - jle : jump if less than or equal
+        - jnle : jume if not less than or equal
+        - jg : jump if greater than
+        - jge : jump if greater than or equal
+        - jnge : jume if not greater than or equal
+        ...
+- Uncoditional Jumps
+    - syntax
+        jump target
+- Loop Instruction
+    - use ecx or cx registeration to maintain repition count
+    - syntax    
+        - Loop, loope, loopz, loopne, loopnz
+- Implementing high-level decision structure
+    - If...else
+        if(val1 > val2)
+            bigger = val1;
+        else
+            bigger = val2;
+        =====================
+            mov ax, val1
+            cmp ax, val2
+            jle else_part
+        then_part:
+            mov ax, val1
+            mov bigger, ax
+            jmp short end_if
+        else_part:
+            mov ax, val2
+            mov bigger, ax
+        end_if:
+    - While_loop
+        while(total < 700){
+            <loop_body>
+        }
+        ================
+            jmp while_cond
+        while_body:
+            <loop_body>
+        while_cond:
+            cmp bx, 700
+            jl while_body
+        end_while:
+    - For loop
+        for(i=0; i<size; i++){
+            <loop_body>
+        }
+        ==============
+            xor esi, esi
+            jmp short for_cond
+        loop_body:
+            <loop_body>
+            inc esi
+        for_cond:
+            cmp esi, size
+            jl loop_body
+    - do .. While_loop
+        do{
+            <loop_body>
+        }while(total < 700)
+        ================
+        do_while_body:
+            <loop_body>
+        do_while_cond:
+            cmp bx, 700
+            jl do_while_body
+        end_while:
+
