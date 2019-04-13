@@ -1,0 +1,156 @@
+- Building code the GNU way
+    - gcc (GNU C Compiler) is first and formost c compiler
+    - Assembly language work is a departure from C work
+    - Building a C program for Linux using the GNU tools is pretty simple
+        - While it looks like gcc does all the work, what gcc really does is 
+        act as master controller for several GNU tools, supervise the 
+        code assembly line that you dont need to see unless you epecifically
+        want to.
+
+            C Source
+            File
+            +----+             
+            | .C |          $ gcc eatc.c -o eatc
+            +----+                  |
+              |                     v
+              V             +----------------+
+            +----+          |                |
+            |cpp |<----------                |
+            +----+          |                |
+              |<--- .C      |                |
+              V             |                |
+            +---------------+                |
+            |                                |
+            |                   gcc          |         
+            |                                |
+            +---------------+                |
+              |<--- .S      |                |
+              V             |                |
+            +----+          |                |
+            |gas |<----------                |
+            +----+          |                |
+              |<--- .O      |                |
+              V             |                |
+            +----+          |                |
+            | ld |<----------                |
+            +----+          |                |
+              |             +----------------+
+              V                     |
+            +----+                  V
+            |eatc|              (Back to shell prompt)
+            +----+
+            Linux
+            Executable
+
+            - The programmer invokes gcc from the shell command line
+                - Typically in a terminal window
+            - gcc takes control of the system and immediatly invokes a utility
+            called the C preprocessor (cpp)
+            - The preprocessor takes the original C source code File and
+            handles certain items linke #include and #defines
+                - It can be thought as a macro expansion pass on the C source ù
+                code file.
+            -  When cpp is finished with its work gcc takes over
+                - then gcc generates an assembly language source code file with
+                an extension of .s file.
+                - This will be the assembly code equivalent of the C statment
+            - When gcc has completed generating the assembly language equivalent
+            of C source code file, it invokes GNU assembler, gas, to assemble
+            the .s file into object code.
+                - The object code is written out in a file with an .O extension.
+            - The final step is to invoke the linker, ld
+                - The .O file contains the binary code but its only binary code
+                generated from statment in the orginal .C file.
+                - The .O files are statments in orginal .c file but they 
+                does not contain the code from C libraries that are so important
+                in C programming.
+                - Those libararies are already compiled they simply needs to be
+                linked. and the linker ld does this work at the direction of 
+                gcc.
+            - At the end ld splits out the fully linked and executable program 
+            file. At that point the build is done and gcc returns control to the 
+            Linux shell.
+- How to use gcc in assembly work
+
+    nasm -f elf -g -F stabs eatclib.ass
+    - when you assemble a Linux program using NASM
+        - Nasm generats an .o file containg the binnary object code.
+        - -f elf: tells nasm to generate boject code in the ELF format 
+        rather than numerous object code formats.
+        - -f -F stabs: part enables the generation of dbug infromation in 
+        the output file.
+        - finally returns eatclib.o
+
+    gcc eatclib.o -o eatclib
+    - –o eatclib: part tells gcc that the name of the final executable 
+    file is to be ‘‘eatclib.’’
+
+- Linking to the standard C library
+
+    Execution                                                         Control
+    begins              The startup and shutdown code part of C       Returns
+    here            library and are linked to you program by gcc      to Linux
+    +--------------+-------------------------------------------+--------------+
+    |              |            The C Library                  |              |
+    | Startup Code |                                           | Shutdown code|
+    | -----------> |  printf scanf getchar put time fget (etc.)| ------------>|
+    +--------------+-------------------------------------------+--------------+
+                   |   | ^   | ^    | ^    | ^  | ^  | ^       ^
+              CALL |   | |   | |    | |    | |  | |  | |       | RET
+                   v   V |   V |    V |    V |  V |  V |       |
+                   +-------------------------------------------+
+                   | main       Your Program Code              |
+                   +-------------------------------------------+   
+- puts() : characters out via puts()
+    - Sends characters to standard ouput.
+    section .data
+        EatMsg: db "Yon Eat Lunch", 0
+    section .bss
+
+    section .text   
+    
+    extern puts
+    global main
+
+    main:
+        push ebp
+        mov ebp, esp 
+
+        push EatMsg
+        call puts
+        add esp, 4
+
+        leave
+        ret 
+
+- printf() : formated text outputs
+    - Has three advantages over puts()
+        - Output text either with or without terminating EOL
+        - Converting numeric data to text in numerous formats
+            - by outputing formating codes along with the data
+        - Output text to a file
+    - Calling printf() in assembly
+        printf(’%d + %d = %d ...for large values of %d.’,2,2,5,2);
+        - Lets do the above in assembly
+        push 2
+        push 5
+        push 2
+        push 2
+        push mathmsg
+        call printf
+        add esp,20
+
+- Data in with fgets() and scanf()
+    - fgets()
+        push dword [stdin] ; Push predefined file handle for standard input
+        push 72 ; Accept no more than 72 characters from keyboard
+        push InString ; Push address of buffer for entered characters
+        call fgets ; Call fgets()
+        add esp,12 ; Stack cleanup: 3 parms X 4 bytes = 12
+
+    - scanf()
+        push IntVal ; Push the address of the integer buffer
+        push Iformat ; Push the address of the integer format string
+        call scanf ; Call scanf to enter numeric data
+        add esp,8 ; Stack cleanup: 2 parms X 4 bytes = 8
+     
