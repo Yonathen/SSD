@@ -1,0 +1,112 @@
+- Consider the following c function
+    #include <stdio.h>
+    #include <stdlib.h>
+
+    void func(int x)
+    {
+        int a = 0;
+        int b = x;
+    }
+    int main()
+    {
+        func(10);
+    }
+- With in assembly
+    SECTION .data
+    
+    SECTION .bss
+
+    SECTION .text
+
+    global _start
+        
+    _start:
+        push 10
+        call func
+    
+    func:
+        push ebp
+        mov ebp, esp
+        sub esp, 8h
+
+        push 0h
+        mov eax, [ebp+8]
+        push eax
+
+        leave
+        ret
+
+- First  
+    +-----------------+
+    | Return Address  |
+    |-----------------|
+    |      10         |
+    +-----------------+
+
+    - value of the argument is pushed
+    - then retrun address is pushed
+    - The return address is simply the four byte address of the instruction 
+    that will be executed as soon as the function goes out of the scope.
+
+- Second
+            +-----------------+ <--- esp
+            |                 |     ^
+            |                 |     |  This is the 
+            |                 |     |  Stack frame
+            |                 |     |
+    ebp --->|-----------------| <--- esp
+            | Return Address  |
+            |-----------------|
+            |      10         |
+            +-----------------+ 
+    - push base pointer 
+    - Stack pointer value is given to the base pointer
+    - Stack pointer is decremented to make roor for the local variables
+        - Depending on the program the decrementing space vary
+    - All the space between ebp and esp is the stack frame
+    - This sequence of instruction is called Prologue
+        - Prologue is performed everytime when a function is called.
+- Third
+            +-----------------+ <--- esp
+            |                 |     
+            |                 |   
+            |-----------------| -------
+            |       0         |  | 0x4
+    ebp --->|-----------------| <--- esp
+            | Return Address  |  |
+            |-----------------|  | 0x8
+            |      10         |  |
+            +-----------------+ -----
+    - Local variable 0 is pushed
+    - value 0 is pushed 4 bytes below ebp 
+        - i.e. ebp-4
+- Fourth
+            +-----------------+ <--- esp
+   ---------|-----------------|     
+     |  0x4 |      10         | <--------------+
+ 0x8 |------|-----------------|                |
+     |  0x4 |       0         |                |
+ ebp ------>|-----------------| <--- esp       |
+     |      | Return Address  |                |
+ 0x8 |      |-----------------|             +----+
+     |      |      10         |  ---------> | 10 |
+   -------- +-----------------+             +----+
+    - Value on a stack can not be moved directly to another location on a stack
+        - To do this 
+            - copy the value to a general purpose register
+            - Then mover the value to the stack four bytes below first variable 
+            and eight bytes below ebp
+
+- Fivth
+    - leave
+        - interpreated as   
+            mov esp, ebp
+            pop ebp
+    - ret
+        - retuns to the return address
+            pop eip
+    - leave/ret is called at the end of every function essentially 
+    destroys the current stack frame by setting the stack pointer to 
+    base pointer of the top stack
+    
+    
