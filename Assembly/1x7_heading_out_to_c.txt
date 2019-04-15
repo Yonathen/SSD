@@ -69,7 +69,7 @@
                 gcc.
             - At the end ld splits out the fully linked and executable program 
             file. At that point the build is done and gcc returns control to the 
-            Linux shell.
+            Linux shell.4
 - How to use gcc in assembly work
 
     nasm -f elf -g -F stabs eatclib.ass
