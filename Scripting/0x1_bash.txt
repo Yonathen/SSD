@@ -8,7 +8,7 @@
         > chmod a+rx my-script.sh
                 or
         > chmod 755 my-script.sh
-        
+
 - why the ./
     - If a program or script is not in one of the directories in your $PATH
     then you can run it by telling Bash where it should look to find it.
@@ -107,6 +107,7 @@
         > A
         > EOF
         10
+- 
 - For loop
     - Syntax
         > for loopname in members
@@ -126,8 +127,31 @@
         Looping ... number 5
 - While loop
     > a = 10
-    > while ["$a" -lt 10]
-    
+    > while [ "$a" -lt 10 ]
+    > do
+    >   <command_1>
+    >   <command_2>
+    > done
+- If statment
+    > if [ ... ]
+    > then
+    >   # if-code
+    > elif [ ... ]
+    >   # ifelse-code
+    > else
+    >   # else-code
+    > fi
+- Reading input from keyboard
+    > read var_name
+    - To give prompt
+    > read -p "File? " file
+- Reading list of file names in a loop
+    > while read -p "File? " file; do ls $file; done
+- Reading from pipe line 
+    > ls | while read file; do ls -laR $file; done 
+- Reading multiple variable from pipeline
+    > ls -i | while read i h; do echo "File $h inode $i"; done
+
 
 
 
