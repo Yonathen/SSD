@@ -1,0 +1,91 @@
+- Concept
+    - Allows a user to run a program with program ownder privilege
+    - Allows a user to run with a teporary elevated privileges
+    - Every process has two IDs
+        - Real UID (RUID) - Identifies real owner of the process    
+        - Effective UID (EUID) - Identifies privilege of a process
+    - When a normal program is executed
+        RUID == EUID
+    - When a Set-UID program is executed
+        RUID != EUID    
+        RUID = User ID
+        EUID = Program owner ID
+        (i.e if the program is root it runs as root)
+    - Example on how to turn a program into Set-UID
+        $ cp /bin/cat ./mycat
+        $ sudo chown root mycat
+        $ ls -l mycat
+        - Copy the cat program to mycat
+        - Change the owner to root
+
+        $ mycat /etc/shadow
+        mycat permission denied
+        - Before enabling Set-UID
+        
+        $ sudo chmod 4755 mycat
+        $ mycat /etc/shadow
+        root :....
+    - Set-UID mechanism security
+        - In principle, the mechanism is secured.
+        - In Set-UID case, normal users can only do whatever is included
+        in the program which requires hier privilege.
+            - Basically users behaviour is restricted.
+        - However, its not good idea to turn /bin/sh program into
+        Set-UID program since it execute other programs specified
+        by users.
+
+- Attack surface of Set-UID
+    - The attack surface for a privileged program, is where it gets its inputs.
+        - This input if not properly sanitized, may affect the behaviour
+        of the program. 
+                            User inputs
+                                |
+                                |
+                                V
+                        +------------------+
+                        |                  |
+    System inputs       |   Set-UID        | <------- Environment Variables
+    that can be ------> |   Program        |       +-------------------------+
+    Controlled by       |                  |-------|  Non-privileged process |
+    users               +------------------+       |  Controlled by user     |
+                                                   +-------------------------+
+                        
+    - User Inputs: Explicit Inputs
+        - A program may explicitly ask users to provide inputs.
+        - If the program does not do a good job sanitizing their inputs, it may
+            - Overflow the buffer and cause the program run malicious code
+            - apply format string attacks
+    - System Inputs
+        - Programs may get inputs from a system
+        - You may assume that since the inputs come from the system they are 
+        safe. But that is not always true.
+        - That depnds on the fact that whether they are controlled by the 
+        untrusted user or not.
+        - Example
+            - A privileged program may want to write on a file xyz in /tmp folder
+            - The file name is already fixed by the program
+            - The target file is provided by the system
+            - It does not seem that there is any user input here.
+            - The file is inside the world-writable /tmp folder
+            - Therefore the actual target of the file may be controllable by user
+                - For Example : User can use symbolic link to make /tmp/xyz points 
+                to /etc/shadow
+            - Although, the user does not directlly provide any input, he/she can
+            influence wht the program gets from the system.
+    - Environment Variables
+        - These are a set of named values that can affect the way a process behaves
+        - These variables can be set before the program starts and they are part
+        of the environment the progrums runs.
+        - When writing a program many developers may not realize the potential risk 
+        introduced by hidden inputs and one of these hidden inputs is env't variables
+        - Because of their stealthy nature, they have caused many problems in
+        Set-UID programs. Example of this is that : 
+            - This is realted to the PATH env't variable 
+            - In C program, if we want to run external command, one the method to 
+            do this is the use of the system() function.
+            - If a privileged Set-UID program uses system("ls") instead of 
+            system("/bin/ls") it can get in trouble 
+        - 
+
+
+    
