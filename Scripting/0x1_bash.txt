@@ -1,0 +1,127 @@
+- What is bash scripting?
+    - is a plaintext file which contains a series of commands.
+    - Anything you can run normally on the command line can be put into
+    a script and it will do exactly the same thing.
+    - file extentension for the bash scripts is .sh
+- why the ./
+    - If a program or script is not in one of the directories in your $PATH
+    then you can run it by telling Bash where it should look to find it.
+- $PATH 
+    - is an individual user variable so each user on a system may set to  
+    suit themselves for different resons
+        - In order to have different version of a program installd and 
+        control which one gets executed based on where it sits on $PATH
+        - Increases safety 
+- Shebang (#!)
+    - Following it is the path to interpreter (or program) that should be used
+    to run (or interpret) the rest of the lines in text file.
+- Variables
+    - when refering to or reading a variable we place $ sign before the name
+    - When setting a variable we leave out $ sign
+    - special Variables
+        $0 - name of the bash script
+        $1-$9 - The first 9 arguments to the bash
+        $# - how many arguments were passed to the bash script
+        $@ - all arguments supplied to the bash
+        $? - exit status of most run process
+        $$ - the process ID of the current script
+        $USER - username of the user running the script
+        $HOSTNAME - hostname of the machine running the script
+        $SECONDS - numberof seconds since the script started
+        $RANDOM - returns random number each time called
+        $LINENO - Retruns the current line number in Bash script
+- Command Substitution
+    - allow us to take the output of a commpand or program and save it as 
+    the value of a variable.
+    - To do this we place it within a brackets, preceded by $ sign.
+        myVar=$(command_or_program)
+- Exporting Variables
+    - syntax
+        export var_name
+    - normally, variables are limited to the process they were created in.
+    - If we want the variable to be available to the second script then 
+    we need to export the variable
+    - is a one way process
+        - original process passes variables over to the new process
+        - But anything the new process does within the copy variables
+        has no impact on the orginal variables.
+- Quotation
+    > x = "Hello World"
+    > echo $x
+    Hello World
+    > echo '$x'
+    $x
+    > echo \'$x\'
+    'Hello World'
+    > echo "'$x'"
+    'Hello World'
+    > echo \"$x\"
+    "Hello World"
+
+- Shell Arthimetics And Base Conversion
+    - Syntax
+        $((expression))
+    - Operators
+        - +,-,/,*,% : Arthimetics
+        - ==,!=,<,>,<=,>= : Comparison
+        - -eq, -lt, -gt, -ne, -le, -ge : Comparison
+    - Arthimetics
+        > echo $((10+50))
+        60
+        > echo $((5*(3+3)))
+        30
+        > x = 10
+        > echo $x
+        10
+    - Base Conversion
+        > echo $((2#100111)) : from base two to decimal
+        > echo $((8#377)) : from base eight to decimal
+        > echo $((16#08)) : from hex to decimal
+    - Base conversion using bench calculator (bc)
+        - obase : output base (default is 10)
+        - ibase : input base (default is 10)
+
+        > echo "obase=16; 47" | bc  -----> from base 10 to base 16
+        27
+        > echo "ibase=16; obase=10; A03" | bc  -----> from base 16 to base 10
+        2563
+- Inline input (<< ANY_STRING)
+    - Example 1
+        > cat << EOF
+        > test
+        > test
+        > EOF
+        test
+        test
+    - Example 2
+        > bc << EOF
+        > ibase=16
+        > obase=10
+        > A
+        > EOF
+        10
+- For loop
+    - Syntax
+        > for loopname in members
+        > do 
+        >   command1
+        >   command2
+        > done
+    - Example 1
+        > for i in 1 2 3 4 5
+        > do
+        >   echo "Looping ... number $i"
+        > done
+        Looping ... number 1
+        Looping ... number 2
+        Looping ... number 3
+        Looping ... number 4
+        Looping ... number 5
+- While loop
+    > a = 10
+    > while ["$a" -lt 10]
+    
+
+
+
+
