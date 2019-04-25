@@ -1,0 +1,82 @@
+- Concept
+    - Environment is defined by env't vairables
+    - Env't vairables are set by
+        - system
+        - operating system
+        - others by shell
+        - any program that loads another program
+    - When you login to the system
+        - Shell under goes a phase called initialization
+        - initialization is two process
+            - Shell checks /etc/profile exist
+                if exist read it else skipped
+            - Shell checks .profile on your home directory
+                if exist read it else skipped
+            - /etc/profile
+                - Maintained by the system admin
+                - Contains shell informations required by all users on the system
+            - .profile
+                - This is under your control
+                - You can add as much shell customization information as you want
+                    - type of terminal you use
+                    - list of directory in which to locate commands
+                    - list of vairables affecting the look and feel of terminal
+                - Setting the PATH
+                    PATH = /bin:/user/bin
+                - How does process get env't vairables
+                    - New process is created by the system call 
+                        - Child process inherite parent process env't vairables
+                    - Process runs a new program in itself typically using 
+                    execve() system call
+                        - In this case old environment variables are lost
+                        - execve () can be invoked in a special manner to pass 
+                        env't variables.
+                            int execve (
+                                const char *fname,
+                                char *const argv[],
+                                char *const envp[]
+                            )
+                - Memory Location for environment variables
+                    - envp : only inside main function
+                    - environ : global variable
+                    (other than scope, they are the same interms of functionalty)
+            - /proc : a virtual file system in linux
+                - Contains a directory for each process
+                - use process ID as name of the directory
+                - example
+                    - /proc/932/environ
+                        - Contains env't variables for process 932
+                    - /proc/$$/environ
+                        - Contains environment variables for the current process
+        +---------------------------+               +---------------------------+       
+        |   +-------------------+   |               |   +-------------------+   |               
+        |   |    Environment    |   |        +------|---|    Environment    |   |
+        |   |    Variable       |   |        |      |   |    Variable       |   |
+        |   +--------|----------+   |        |      |   +--------|----------+   |
+        |------------|--------------|        |      |            |              |
+        |   +--------|----------+   |        |      |            |              |
+        |   |   Shell Variable  |   |        |      |            |              |
+        |   |   Copied from     |   |        |      |       RUNNING             |
+        |   |   Environment     |---|--------+      |       NEW PROGRAM         |
+        |   |   Variable        |   |        |      |       STRATED FROM        |
+        |   +-------------------+   |        |      |       SHELL PROGRAM       |
+        |                           |        |      |                           |
+        |   +-------------------+   |        |      |                           |
+        |   |   User Defined    |---|--------+      |                           |
+        |   |   Shell Variable  |   |               +---------------------------+
+        |   |   Exported        |   |                   (Child Process)
+        |   +-------------------+   |
+        |                           |
+        |   +-------------------+   |
+        |   |   User defined    |   |
+        |   |   Shell Variable  |   |
+        |   |   Not Exported    |   |
+        |   +-------------------+   |
+        |                           |
+        |   +-------------------+   |
+        |   |   Predefined      |   |
+        |   |   Shell Variable  |   |
+        |   +-------------------+   |
+        |                           |
+        +---------------------------+ 
+            (Parent Process)
