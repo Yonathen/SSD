@@ -79,7 +79,7 @@
         - When writing a program many developers may not realize the potential risk 
         introduced by hidden inputs and one of these hidden inputs is env't variables
         - Because of their stealthy nature, they have caused many problems in
-        Set-UID programs. Example of this is that : 
+        Set-UID programs. Example of this is that :                                                                                      
             - This is realted to the PATH env't variable 
             - In C program, if we want to run external command, one the method to 
             do this is the use of the system() function.

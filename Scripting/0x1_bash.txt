@@ -34,7 +34,7 @@
         $$ - the process ID of the current script
         $USER - username of the user running the script
         $HOSTNAME - hostname of the machine running the script
-        $SECONDS - numberof seconds since the script started
+        $SECONDS - numberof seconds since the script started                                                          
         $RANDOM - returns random number each time called
         $LINENO - Retruns the current line number in Bash script
 - Command Substitution

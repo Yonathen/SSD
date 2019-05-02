@@ -23,6 +23,30 @@
                     - list of vairables affecting the look and feel of terminal
                 - Setting the PATH
                     PATH = /bin:/user/bin
+                - How to use env't variables
+                    - envp : only inside main function
+                    - environ : global variable                                                                                                          ì                                    a  s   df n        j a sd   f                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                    (other than scope, they are the same interms of functionalty)                             
+                    example
+                        #include <stdio.h>
+
+                        extern char** environ;
+                        void main(int argc, char* argv[], char envp[]){
+                            int i = 0;
+                            while(envp[i] != NULL ) {
+                                printf("%s\n", envp[i]);
+                                i++;
+                            }
+
+                            // OR
+
+                            int k = 0;
+                            while(environ[k] != NULL ) {
+                                printf("%s\n", environ[k]);
+                                i++;
+                            }
+                        }
+
                 - How does process get env't vairables
                     - New process is created by the system call 
                         - Child process inherite parent process env't vairables
@@ -36,10 +60,56 @@
                                 char *const argv[],
                                 char *const envp[]
                             )
+                        examples
+                            v[0] = "/usr/bin/env"; v[1] = NULL;
+                            execve(v[0], v, NULL);
+                            - Passing no environment variables
+
+                            newenv[0]="AAA=aaa"; newenv[1]="BBB=bba"; newenv[2]=NULL; 
+                            execve(v[0], v, newenv);
+                            - Passing a new set of environment variables
+
+                            extern char ** environ;
+                            ...
+                            execve(v[0], v, environ);
+                            - Passing a all the of environment variables
+
+
                 - Memory Location for environment variables
-                    - envp : only inside main function
-                    - environ : global variable
-                    (other than scope, they are the same interms of functionalty)
+                    +-------------------------------------------+ 
+                    |                                           |    
+                    |   +-----------------------------------+   |
+                    |   | String for environment variables  |   |
+                +---|-->|    (e.g. "SHELL=/bin/bash")       |   |
+                |   |   |                                   |<--|---+
+                |   |   |        String for argv[]          |   |   |
+                |   |   +-----------------------------------+   |   |   
+                |   |                                           |   |   
+                |   |   +-----------------------------------+   |   |
+                |   |   |envp[n]                            |   |   |                             
+                +---|---|.                                  |   |   |
+                    |   |.   Each array entry is a pointer  |   |   |
+                +---|-->|.                                  |   |   |
+                |   |   |envp[0]                            |   |   |
+                |   |   +-----------------------------------+   |   |   
+                |   |   +-----------------------------------+   |   |   
+                |   |   |argv[n]                            |   |   |                            
+                |   |   |.                                  |---|---+
+                |   |   |.   Each array entry is a pointer  |   |
+                |   |   |.                                  |   |
+                |   |   |argv[0]                            |<--|---+
+                |   |   +-----------------------------------+   |   |
+                |   |   +-----------------------------------+   |   |
+                +---|---|        envp (a pointer)           |   |   |
+                    |   +-----------------------------------+   |   |   
+                    |   |        argv (a pointer)           |---|---+
+                    |   +-----------------------------------+   |
+                    |   |        argc (an int)              |   |
+                    |   +-----------------------------------+   | 
+                    |                                           |  
+                    +-------------------------------------------+ 
+
+
             - /proc : a virtual file system in linux
                 - Contains a directory for each process
                 - use process ID as name of the directory
@@ -48,6 +118,28 @@
                         - Contains env't variables for process 932
                     - /proc/$$/environ
                         - Contains environment variables for the current process
+                - to print out the text in the virtual file use "strings"
+                as follows
+                    strings /proc/932/environ
+        - Shell variables and environment variables
+            - Shell Variables and Environment variables are two different things
+            - In Computing, Shell is a command line interfercae for user to interact with
+            the operating system.
+                - example: Bourne shell, Bash, Dash, C Shell
+            - Shell Variables are internal variables maintained by shell program
+                - affects shell behaviour and also used in shell script.
+                - Shell provides built in commands to create, assign, and delete
+                    - create & assign : FOO=bar
+                    - display : echo $FOO
+                    - delete : unset $FOO
+            - However, shell variables can become environment variables and environment
+            variables can be shell variables.
+
+            - Shell Variables >>> Program Starts >>> Copy Environment Variables to Shell
+                (Therefore changes made to shell variables in the child variables 
+                will not be reflcted on the Environment Variable)
+
+            (Parent Process)                            (Child Process)
         +---------------------------+               +---------------------------+       
         |   +-------------------+   |               |   +-------------------+   |               
         |   |    Environment    |   |        +------|---|    Environment    |   |
@@ -80,3 +172,74 @@
         |                           |
         +---------------------------+ 
             (Parent Process)
+
+- Attack surface caused by environment variables
+    - The hidden usage of the environment variables is dangerous
+    - Env't variables must be sanitized before usage.
+        - Since they can be set by the users
+    - The attack surface can be categorized as follows
+        - Linker
+        - Application
+            - Library
+            - External Program
+            - Application Code
+    - Attack Via Dynamic Linker
+        - The linking in dynamic linker is conducted during runtime unlike static
+        linker.
+        - Libraries supporting dynamic linking are called shared libraries.
+            - in unix .so suffix
+            - in Microsoft DLL 
+        - Steps for running programs in Dynamic linking
+            - Loading : Executable is loaded into memory first.
+                - Linux ELF executables, a standard file format for executables, 
+                contains a .interp section that specify the name of dynamic linker
+                    - which itself is a shared library (ld-linux.so)
+            - Dinamic Linker: after loading dynamic linker finds printf or any other 
+            function that needs linking 
+                - finds the implimentation  from shared libreries 
+                - link the invocation function from executable to the actual 
+                implimentation code function
+            - Jump to main : After linking finished the main takes control
+        - we can use ldd command to see what shared libraries the program depends on
+            gcc -o dynamic_prog dynamic_prog.c
+            ldd dynamic_prog
+        - LD_PRELOAD and LD_LIBRARY_PATH
+            - LD_PRELOAD : contains list of shared libraries, which will be 
+            searched first by dynamic linker
+            - LD_LIBRARY_PATH : is colon-separated set of directories where libraries
+            should be searched for the first, before the standard set of directories.
+            - Since these two variables can be set by the user, There is a posiblity
+            for the user to alter the outcom of the dynamic linking.
+            - If the program is previleged Set-UID program, the use of this env't 
+            variable by dynamic linker may lead to security breaches.
+
+                /* mytest.c */
+                int main() {
+                    sleep(1);
+                    return 0;
+                }
+
+                - run it
+                gcc mytest.c -o mytest
+                ./mytest
+
+                - Create your own sleep function
+                /* sleep.c */
+                #include <stdio.h>
+
+                void sleep (int s){
+                    printf("I am not sleeping");
+                }
+                - Compile the sleep function
+                gcc -c sleep.c
+
+                - create a shared library with newly created sleep function inside it
+                gcc -shared -o libmylib.so.1.0.1 sleep.o 
+
+                - include it in LD_PRELOAD 
+                export LD_PRELOAD=./libmylib.so.1.0.1 
+
+                - now run the mytest program and you will get...
+                ./mytest
+                I am not sleeping
+        
