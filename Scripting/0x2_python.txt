@@ -1,0 +1,596 @@
+- keyword
+    - and : logical and operator (&&)
+    - assert : example :- assert a > 5
+    - break
+    - class
+    - continue
+    - def
+    - elif
+    - except : try...except blocks are used to catch exceptions 
+        try:
+            r = 1/num
+        except:
+            print('Exception caught')
+    - exec : Dynamic execution of python program
+        prog = 'print("The sum of 5 and 10 is", (5+10))'
+        exec(prog) 
+    - finally
+    - for
+    - from : used when importing modules
+        from math import cos
+    - global : used to declare that a variable inside the function is global
+        globalvar = 5
+        def func():
+            global globalvar
+            globalvar = 6;
+    - if
+    - import
+    - in : is used to test if a sequence (list, tuple, string etc.) contains a value
+        var1 = [1, 2, 3]
+        5 in var1
+    - is : used to test if the two variables refer to the same object
+        >>> True is True
+        True
+        >>> False is False
+        True
+        >>> None is None
+        True
+        >>> [] == []
+        True
+        >>> [] is []
+        False
+        >>> {} == {}
+        True
+        >>> {} is {}
+        False
+    - lambda : used to create an anonymous function (function with no name)
+        a = lambda x: x*2
+        for i in range(1,3):
+            print(a(i))
+        2
+        4
+        6
+    - not
+    - or
+    - pass
+    - print
+    - range([start], stop[, step])
+    - raise
+    - return 
+    - try
+    - while
+    - with
+    - yield
+- Line indentation
+    - No brace in python intead we use indtations
+    - Every statment end with newline we dont need the use of (;)
+    - To indicate line should continue use (\)
+        a = 1 + 2 + 3 + \
+            4 + 5 + 6 + \
+            7 + 8 + 9
+    - statments in {}, [], or () do not need (\) for line continuation
+        a = (1 + 2 + 3 +
+            4 + 5 + 6 +
+            7 + 8 + 9)
+    - We could also put Multiple statments in a single line using
+    semicolons
+        a = 1; b = 2; c = 3
+- Comments 
+    - Single line comment 
+        #This is a long comment
+    - Multilien comment (use triple quotes)
+        """This is also a
+            perfect example of
+            multi-line comments"""
+    - usage of comments in python
+        def double(num):
+            """Function to double the value"""
+            return 2*num
+
+        >>> print(double.__doc__)
+        Function to double the value
+- Qoutation
+    - Single, double, triple quotes are possible as long as they end
+    with the same quotes
+- Command line arguments
+    - python -h : prints help
+    - python -c <Command> : program is passed as an argument.
+    - python -d : debuge output from parser
+    - python -E : ignore env't variables
+- Parsing Command
+#!/usr/bin/env python
+
+import sys
+import optparse
+
+parser = optparse.OptionParser()
+parser.add_option("-n", "--name", dest="name", help="Your Name")
+parser.add_option("-a", "--age", dest="age", help="Your Age")
+
+(options, args) = parser.parse_args()
+if options.name is None :
+    options.name = raw_input("Enter name: ");
+
+if options.age is None :
+    options.age = raw_input("Enter age: ");
+
+sayHello = "Hello "+options.name+","
+age = int(options.age)
+if age === 100 :
+    sayAge = "You just turned 100"
+elif age < 100 :
+    sayAge = "You will be 100 in "+str(100-age)+" years."
+else :
+    sayAge = "You turned 100 in "+str(100-age)+" years ago."
+
+print sayHello+sayAge
+
+- Variables
+    - Multiple Assignment : 
+        a = b = c = 1
+    - Data Types
+        numbers, strings, list, tuple, dictionary
+    - del statment
+        del var1
+        - deletes reference to a number
+    - numbers
+        int, long, float, complex
+    - string
+        str = "Hello World"
+        print str
+        - prints the string fully
+        print str[0]
+        - prints the first character "H"
+        print str[2:5]
+        - prints third to fifth "llo"
+        print str[2:]
+        - prints third to last "llo world"
+        print str*2
+        - prints str two times "Hello WorldHello World"
+    - list
+        list = ["abc", "xyz", 123, 2.23]
+        list1 = [456, "Jhon"]
+        print list
+        - prints all the values 
+        print list[0]
+        - prints only 'abc'
+        print list[1:3]
+        - print from second to third "'xyz', 123"
+        print list[1:]
+        - print from second to last "'xyz', 123, 2.23"
+        print list*2
+        - print list 2 times
+        print list+list1
+        - prints the concatunated list1 with list2
+    - tuple : Same as list except that it can not be updated
+        tuple = ("abc", 123, 10)
+    - dictionary
+        dict = {}
+        dict['one']="One"
+        dict[2]=2
+        dict1={'name':'jhon', 'age':21}
+        print dict1
+        print dict1.keys()
+        print dict1.value()
+    - Special literals
+        - Python contains one special literal 
+            i.e. None : used to specify the field is not created.
+    
+
+- Data type conversion
+    - int (x, base_specifier)
+        Converts x to integer
+    - long (x, base_specifier)
+        Converts x to long
+    - float(x)
+        Converts x to float
+    - str(x)
+        Converts x to string
+    - repr(x)
+        Returns printable representation of an object
+    - eval(str)
+        evaluate the string and return an object
+    - tuple(s)
+        converts s to tuple
+        >>> tuple({5,6,7})
+        (5, 6, 7)
+    - list(s)
+        converts s to list
+        >>> list('hello')
+        ['h', 'e', 'l', 'l', 'o']
+    - chr(x)
+        converts integer to character
+    - ord(x)
+        converts single character to integer value
+- Decision making
+    - Syntax
+        if <Expression_1> :
+            <Statment_1>
+            <Statment_2>
+        elif <Expression_2> :
+            <Statment_3>
+            <Statment_4>
+        else :
+            <Statment_5>
+- Loop
+    - While Syntax
+        while <Expression_1> :
+            <Statment_1>
+            <Statment_2>
+    - For Syntax
+        for var in sequence :
+            <Statment_1>
+            <Statment_2>
+        - sequences are 
+            range(a, b) : where a and b are integers
+            string
+            list, tuple
+    - Loop control statments
+        break
+        continue
+- String
+    - Escape character
+        \a (0x07) : alert
+        \b (0x08) : backspace
+        \e (0x1b) : Escape
+        \f (0x0c) : Form feed
+        \n (0x0a) : Newline
+        \r (0x0d) : Carriage return
+        \s (0x20) : Space
+    - Special operator
+        + : concatenation
+        * : Repitition
+        [] : Slice
+        [:] : Range Slice
+        in : Membership return
+        not in : Membership
+        [::-1] : reverse string
+    - String formating operators
+        print "My name is %s and my weight is %d kg!" % ("Zara", 31)
+        My name is Zara and my weight is 31 kg!
+
+        %c : character
+        %s : string
+        %i : signed decimal integer
+        %d : signed decimal integer
+        %u : unsigned decimal integer
+        %o : octal integer
+        %x : hexadecimal integer (lowercase)
+        %X : hexadecimal integer (uppercase)
+        %f : floating point
+    - String methods
+        capitalize(str)
+        center(width, fillChar)
+        - width: length of the string with padded character
+        - fillChar: (optional) padding character
+        count(str, begining, end)
+        decode(encoding, errors)
+        encode(encoding, errors)
+        endswith(suffix, beg, end)
+        - Determines if a string or substring ends with suffix
+        find(str, beg, end)
+        - Determines if str occurs or not (return 1 or -1)
+        rfind(str, beg, end)
+        - Same as str but search backwards
+        lstrip()
+        - removes leading whitespace
+        rstrip()
+        - removes trailing whitespace
+        strip()
+        - removes both lstrip() and rstrip()
+        max(str)
+        - returns maximum alphabetical character
+        min(str)
+        - returns minimum alphabetical character
+        replace(old, new, max)
+        - replaces all occurances of old in string with new at 
+        most with max occurances if max is given.
+    - List methods
+        cmp(list1, list2)
+        - Compare list1 and list2
+        len(list1)
+        - Total length of the list1
+        max(list1)
+        - Returns item from the list with max value
+        min(list1)
+        - Returns item from the list with min value
+        list(seq)
+        - Converts tuple to list
+        list1.append(obj)
+        - Obj is appended to list1
+        list1.count(obj)
+        - Counts occurances o obj on list1
+        list1.extend(seq)
+        - appends the contents of seq to list1
+        list1.pop(obj) 
+        - removes and returns last object from the list
+        list1.remove(obj) 
+        - removes obj from the list
+        list1.reverse() 
+        - Reverse objects of the list in place
+        list1.sort([func]) 
+        - sort objects in the list, use compare func if given
+- Function
+    - Syntax
+        def <function_name>(param...):
+            <Statment_1>
+            <Statment_2>
+            return <Expression>
+    - default argument
+        def greet(name, msg = "Good morning!"):
+            <Statment_1>
+            <Statment_2>
+
+- Input / output
+    - Input 
+        - Reading from keyboard input
+            raw_input("Enter ...")
+            - Read one line input and return it as string
+            input("Enter...")
+            - Assumes the input is a vaild python expression 
+        
+    - Output 
+        - Python output using print() function
+            - Syntax
+                print(*objs, sep=' ', end='\n', file=sys.stdout, flash=False)
+                - objs: values printed
+                - sep: separator used between values
+                - file: the object where the values are printed.
+                    sys.stdout is the screen
+                - flash: 
+            - output data to the standard output device (screen)
+            
+            print('Output this sentence.')
+            > Output this sentence.
+
+            a = 5
+            print('The value of a is:', a)
+            > The value of a is: 5
+            - The space between 5 and the string is by default.
+            - The sparator can be changed.
+            
+            print('The value of a is:', a, sep='-')
+            > The value of a is:-5
+        - Output formating
+            - this can be done str.format()
+
+            x = 5; y = 10; z = 20
+            print ( '2 times {} is {}'.format(x,y))
+            > 2 times 5 is 10
+            print ( '2 times {0} is {1}'.format(x,y))
+            > 2 times 5 is 10
+            print ( '2 times {1} is {0}'.format(z,y))
+            > 2 times 10 is 20
+            - The curly brases are used as placeholders
+
+            print('Hello {n}, {gr}'.format(gr = 'Goodmorning', n = 'John'))
+            > Hello John, Goodmorning
+
+- File 
+    object = open ( file_name, access_mode, buffering )
+    - file_name : name of the file you wanted to access
+    - access_mode : mode in which file has to be opened
+        - r : opens file for read only.
+            the file pointer is placed at the begining
+        - rb : opens a file for reading only in binary format
+            the file pointer is placed at the begining
+        - r+ : opens a  file for both reading and writing
+            the file pointer is placed at the begining
+        - rb+ : opens a file for borth reading and writing in binary 
+            format
+            the file pointer is placed at the begining
+        - w : opens a file for writing only
+            overwrites if it exist
+            create newe if it doesnot exist
+            the file pointer is placed at the begining
+        - wb : opens a file for writing only in binary format
+            overwrites if it exist
+            create newe if it doesnot exist
+            the file pointer is placed at the begining
+        - w+ : opens file for both writing and reading. 
+            overwrites if it exist
+            create newe if it doesnot exist
+            the file pointer is placed at the begining
+        - wb+ : opens a file for both writing and reading binary format
+            overwrites if it exist
+            create newe if it doesnot exist
+            the file pointer is placed at the begining
+        - a, ab, a+, ab+ : opens for appending 
+            the file pointer is placed at the end
+    - buffering: 0 or 1
+
+    object.closed
+    - returns true if the file is closed
+    object.mode
+    - returns access_mode
+    object.name 
+    - returns the name of the file_name
+    object.softspace
+    - returns false if space is explicitly required with print
+        true otherwise
+    
+    object.close()
+    - flush unwritten information and closes the object
+    - after that no more writing can be done 
+    object.write(string)
+    - writes string to the opened file
+    object.read([count])
+    - reads a string from open file
+    object.tell()
+    - check the current position
+    object.seek(offset[, from])
+        - offset : indicates the number of bytes to be moved
+        - from : specifies reference position from where 
+            (0:start, 1:current, 2:end)
+    object.rename(current_file_name, new_file_name)
+    - rename the file
+    object.remove(file_name)
+    - remove the file
+
+    - Example 1
+        with open("test.txt",'w',encoding = 'utf-8') as f:
+            f.write("my first file\n")
+            f.write("This file\n\n")
+            f.write("contains three lines\n")
+        
+
+        >>> f = open("test.txt",'r',encoding = 'utf-8')
+        >>> f.read(4)    # read the first 4 data
+        'This'
+        >>> f.read(4)    # read the next 4 data
+        ' is '
+        >>> f.read()     # read in the rest till end of file
+        'my first file\nThis file\ncontains three lines\n'
+        >>> f.read()  # further reading returns empty sting
+        ''
+- Directories in python
+    #!/usr/bin/python
+    import os
+
+    os.mkdir("Test")
+    - Create a directory named Test
+    os.getcwd()
+    - Gets the present working directory 
+        (retruns in the form of string)
+    os.getcwdb()
+    - Gets the present working directory 
+        (retruns in the form of byte object)
+    os.chdir('path')
+    - Changes the current working directory
+    os.listdir()
+    - Lists all the files and sub directories inside the current working
+    directory
+    os.listdir([path])
+    - Lists all the files and sub directories inside the specified
+    directory
+
+- Python Object Oriented Programming
+    - Syntax
+        class <class_name>:
+            attr_name_1 = "attr_value_1"
+            attr_name_2 = "attr_value_2"
+
+            def __init__(self, val1, val2):
+                self.attr_name_1 = val1
+                self.attr_name_2 = val2
+
+            def method_1():
+                <Statment_1>
+                .
+                .
+                <Statment_n>
+            
+            .
+            .
+            .
+
+            
+            def method_m(self):
+                <Statment_1>
+                .
+                .
+                <Statment_k>
+    - Inheritance
+        class ParentClass:
+
+            def __init_(self):
+                print("ParentClass is Ready")
+
+            def whoIsThis(self):
+                print("ParentClass")
+
+            def parentFunction(self):
+                print("ParentClass Function")
+
+        class ChildClass(ParentClass):
+            def __init_(self):
+                super().__init_()
+                print("ChildClass is ready")
+
+            def whoIsThis(self):
+                print("ChildClass")
+
+            def childFunction(self):
+                print("ChildClass Function")
+
+        child = ChildClass() 
+        child.whoIsThis()
+        child.childFunction()
+        child.parentFunction()
+
+        > ParentClass is Ready
+        > ChildClass
+        > ChildClass Function
+        > ParentClass Function
+
+    - Encapsulation
+        - In python we denote private attributes using single '_' or 
+        double '__' underscore as prifix
+            class Computer:
+
+                def __init__(self):
+                    self.__maxprice = 900
+
+                def sell(self)
+                    print("Sell : {}".format(self.__maxprice))
+
+                def setMax(self, price)
+                    self.__maxprice = price
+
+            c = Computer()
+            c.sell() # 900
+
+            c.__maxprice = 1000
+            c.sell() # 900
+
+            c.setMax(1000)
+            c.sell() # 1000
+
+    - Polymorphism
+        - is the ability to use common interface for multiple form.
+        - Suppose we need to color a shape
+            - There are multiple shapes
+                (Rectangle, Circle, ...)
+            - However, we can use single function to color any shape.
+            - This concept is called Polymorphism.
+
+        class Parrot:
+
+            def fly(self):
+                print("Can fly")
+
+            def swim(self):
+                print("Can not swim")
+
+        
+        class Penguin:
+
+            def fly(self):
+                print("Can not fly")
+
+            def swim(self):
+                print("Can swim")
+
+        # common interface
+        def flying_test(bird)
+            bird.fly()
+
+        obj1 = Parrot()
+        obj2 = Penguin()
+
+        flying_test(obj1)
+        flying_test(obj2)
+
+        > Can fly
+        > Can not fly
+
+    
+            
+
+            
+
+
+
+
+            
+        
