@@ -1,0 +1,17 @@
+- Concept
+    - Memory allocation
+        - Before copying of data from source to destination, a program
+        needs Memory to the destination.
+        - Sometimes, programs make mistake and fail to allocate enough
+        memory to the destination.
+        - Data will be copied to the destination buffer more than 
+        the amount allocated.
+            - This will result in memory overflow.
+        - Most people think that the damage of this mistake is only 
+        buffer overflow. 
+            - However, what is surprising is that such simple mistake
+            can cause an attacker to control the program fully.
+            - If a program with such vulerability is running with 
+            privileges, then attacker will be able to gain those 
+            privileges.
+        

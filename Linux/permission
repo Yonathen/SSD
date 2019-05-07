@@ -1,0 +1,77 @@
+- Concept 
+    - Every unix user has a file permission and access mode
+    - File ownership is important component of unix 
+    - Provides a secure access method to stored files
+    - Every file unix has the following attributes
+        - Owner permission
+            - Determines what action owner can perform on a file
+        - Group permission
+            - Determine what action group can perform on a file.
+        - Other permission 
+            - Determine what acction others can perform on a file.
+    
+    +---------------------------------------+
+	| -rw-r--r-- 1 root root 4096 dec 25... |
+	|=======================================|
+	| -    rw-   r--   r--      			|
+	| type owner group other        		|
+	+---------------------------------------+
+	+---------------------------------------+
+	|	        Value	Value	Value   	|
+	|	      for off	for on	for on  	|
+	|			        Binary	base 10 	|
+	|=======================================|
+	| r : read  	0	  1	    4	        |
+	| w : write 	0	  1	    2	        |
+	| x : execute	0	  1	    1	        |
+	+---------------------------------------+
+        
+	+---------------------------------------+
+	|	    Octal	Binary	Description	    |
+	|=======================================|
+	| ---	   0	   0	No permission	|
+	| --x	   1	   1	Execution only  |
+	| -w-	   2	  10	Write only  	|
+	| -wx	   3	  11	write & Execute |
+	| r--	   4	  100	Read only	    |
+	| r-x	   5	  101	Read & Execute	|
+	| rw-	   6	  110	Read & Write	|
+	| rwx	   7	  111	read, wrie exec |
+	+---------------------------------------+
+
+    +-----------------------+
+	|	Category			|
+	|=======================|
+	|	u : user			|
+	|	g : group			|
+	|	o : other			|
+	|	a : all				|
+	+-----------------------+
+
+
+	+-----------------------------------+
+	|	Changing Permission (chmod) 	|
+	|===================================|
+	| Symbolic Mode	                    |
+    |        + : add permisssion        |
+	|		 - : remove permission	    |
+	|		 = : Set permission	        |
+	|					                |
+	|		 chmod o+wx file1	        |
+	|		 chmod u-x file1        	|
+	|		 chmod g=rx file1       	|
+	|					                |
+	| Absolute Mode	                	|
+	|		 chmod 755 file1	        |
+	|		 chmod 743 file1	        |
+	|		 chmod 043 file1        	|
+	+-----------------------------------+
+
+	+-------------------------------+
+	|	Changing Ownership		    |
+	|===============================|
+	| Changing ownership			|
+	|	chown user_name file1		|
+	| Changing group ownership		|
+	|	chgrp group_name file1		|
+	+-------------------------------+

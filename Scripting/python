@@ -1,0 +1,151 @@
+- keyword
+    - and : logical and operator (&&)
+    - assert : example :- assert a > 5
+    - break
+    - class
+    - continue
+    - def
+    - elif
+    - except : try...except blocks are used to catch exceptions 
+        try:
+            r = 1/num
+        except:
+            print('Exception caught')
+    - exec : Dynamic execution of python program
+        prog = 'print("The sum of 5 and 10 is", (5+10))'
+        exec(prog) 
+    - finally
+    - for
+    - from : used when importing modules
+        from math import cos
+    - global : used to declare that a variable inside the function is global
+        globalvar = 5
+        def func():
+            global globalvar
+            globalvar = 6;
+    - if
+    - import
+    - in : is used to test if a sequence (list, tuple, string etc.) contains a value
+        var1 = [1, 2, 3]
+        5 in var1
+    - is : used to test if the two variables refer to the same object
+        >>> True is True
+        True
+        >>> False is False
+        True
+        >>> None is None
+        True
+        >>> [] == []
+        True
+        >>> [] is []
+        False
+        >>> {} == {}
+        True
+        >>> {} is {}
+        False
+    - lambda : used to create an anonymous function (function with no name)
+        a = lambda x: x*2
+        for i in range(1,3):
+            print(a(i))
+        2
+        4
+        6
+    - not
+    - or
+    - pass
+    - print
+    - raise
+    - return 
+    - try
+    - while
+    - with
+    - yield
+- Line indentation
+    - No brace in python intead we use indtations
+    - Every statment end with newline we dont need the use of (;)
+    - To indicate line should continue use (\)
+    - statments in {}, [], or () do not need (\) for line continuation
+- Qoutation
+    - Single, double, triple quotes are possible as long as they end
+    with the same quotes
+- Command line arguments
+    - python -h : prints help
+    - python -c <Command> : program is passed as an argument.
+    - python -d : debuge output from parser
+    - python -E : ignore env't variables
+- Parsing Command
+#!/usr/bin/env python
+
+import sys
+import optparse
+
+parser = optparse.OptionParser()
+parser.add_option("-n", "--name", dest="name", help="Your Name")
+parser.add_option("-a", "--age", dest="age", help="Your Age")
+
+(options, args) = parser.parse_args()
+if options.name is None :
+    options.name = raw_input("Enter name: ");
+
+if options.age is None :
+    options.age = raw_input("Enter age: ");
+
+sayHello = "Hello "+options.name+","
+age = int(options.age)
+if age === 100 :
+    sayAge = "You just turned 100"
+elif age < 100 :
+    sayAge = "You will be 100 in "+str(100-age)+" years."
+else :
+    sayAge = "You turned 100 in "+str(100-age)+" years ago."
+
+print sayHello+sayAge
+
+- Variables
+    - Multiple Assignment : 
+        a = b = c = 1
+    - Data Types
+        numbers, strings, list tuple, dictionary
+    - del statment
+        del var1
+        - deletes reference to a number
+    - numbers
+        int, long, float, complex
+    - string
+        str = "Hello World"
+        print str
+        - prints the string fully
+        print str[0]
+        - prints the first character "H"
+        print str[2:5]
+        - prints third to fifth "llo"
+        print str[2:]
+        - prints third to last "llo world"
+        print str*2
+        - prints str two times "Hello WorldHello World"
+    - list
+        list = ["abc", "xyz", 123, 2.23]
+        list1 = [456, "Jhon"]
+        print list
+        - prints all the values 
+        print list[0]
+        - prints only 'abc'
+        print list[1:3]
+        - print from second to third "'xyz', 123"
+        print list[1:]
+        - print from second to last "'xyz', 123, 2.23"
+        print list*2
+        - print list 2 times
+        print list+list1
+        - prints the concatunated list1 with list2
+    - tuple : Same as list except that it can not be updated
+        tuple = ("abc", 123, 10)
+    - dictionary
+        dict = {}
+        dict['one']="One"
+        dict[2]=2
+        dict1={'name':'jhon', 'age':21}
+        print dict1
+        print dict1.keys()
+        print dict1.value()
+    
