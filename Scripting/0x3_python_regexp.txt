@@ -1,0 +1,162 @@
+- Regular Expression (RegEx)
+    - Sequence of characters that defines a seach pattern.
+        ^a...s$
+        - any 5 letter string starting with a and ending with s
+    - Python has module named re to work with RegEx
+        import re
+
+        pattern = '^a...s$'
+        test_string = 'abyss'
+        result = re.match(pattern, test_string)
+
+        if result:
+            print("Search Successful")
+        else:
+            print("Search Unsuccessful")
+
+    - Specify pattern using RegEx
+        - Metacharacters
+            [] . ^ $ + ? {} () \ |
+            - [] : Specify a set of characters you wish to match
+                [abc]
+                - "abc de ca" has 5 match
+                - "Hey" has no match
+                
+                [a-e] is the same as [abcde]
+                [1-4] is the same as [1234]
+                [0-39] is the same as [01239]
+                [^abc] means any character except a or b or c
+                [^0-9] means any non-digit character
+            
+            - . (Period) : match any single character
+                . : matches for single character
+                .. : matches for 2 characters
+            - ^ (Caret) : used to check if the string starts with
+                ^a : starts with letter 'a'
+                ^abc : starts with 'abc'
+            - $ (Dollar) : used to check if the string ends with
+                a$ : ends with letter 'a'
+            - * : zero or more occurance
+                ma*n : a is zero or more
+                    - Match : mn, man, maan
+                    - No Match : main
+            - + : one or more occurances
+                ma+n : a is one or more
+                    - Match: man, maan
+                    - no match: mn
+            - ? : zero or one occurance
+                ma?n : a is zero or one
+            - {n,m} : at least n and at most m repetitions
+                a{2,3} : a is at least 2 and at most 3
+                    Match: aab, daaat
+                    No Match : at, dat, daaaat
+                [0-9]{2,4} : matches atleast 2 digits but no more than 4
+            - () : Group : used to group sub-pattern
+                (a|b|c)xyz : match any string that match either
+                    a or b or c followed by xyz
+                    Match : abxyz
+                    No Match : ab xyz
+            - \ : is used to escape varipush characters including all
+                Metacharacters.
+            - | : for alternation (Or opperator)
+                a|b : a or b
+        - Special Sequence
+            - \A : Matches if the specified characters are start of 
+            a string.
+            - \b : Matches if specified characters are begining or 
+            end of word
+                \bfoo : begining of word
+                    a football, the football is good
+                foo\b : end of word
+                    the afoo test, but not "the afootest"
+            - \B : opposit of \b, if characters aren't begining or end
+            of a word
+            - \d : matches any decimal digit. Same as [0-9]
+            - \D : matches any non-decimal value. same as [^0-9]
+            - \s : matches any string containing whitespace.
+                    same as [\t\n\r\f\v]
+            - \S : matches a string with non-whitespace character.
+                    same as[^\t\n\r\f\v]
+            - \w : matches any alphanumeric character
+                    same as [a-zA-Z0-9_]
+            - \W : matches any non alphanumeric character
+                    same as [^a-zA-Z0-9_]
+            - \Z : Matches if the specified characters are 
+            at the end of a string.
+- Python RegEx
+    import re
+    - This module has several functions and constants to work with RegEx
+    
+    re.findall(pattern, string)
+    - returns all list of strings containing all matches
+    -----------------------------------
+        import re
+
+        string = 'hello 12 hi 89.'
+        pattern = '\d+'
+
+        result = re.findall(pattern, string)
+        print(result)
+
+        > ['12', '89']
+    -----------------------------------
+
+
+    re.split(pattern, string[, maxsplit])
+    - returns the list of strings where the splits have occured
+    -----------------------------------
+        import re
+
+        string = 'hello 12 hi 89.'
+        pattern = '\d+'
+
+        result = re.split(pattern, string)
+        print(result)
+
+        result = re.split(pattern, string, 1)
+        print(result)
+
+        > ['hello ', ' hi ', '.']
+        > ['hello ', ' hi 89.']
+    -----------------------------------
+
+
+    re.sub(pattern, replace, string[, count])
+    - this function replaces all matching string and return new one
+    -----------------------------------
+        import re
+
+        string = 'abc 12\
+        de 23 \n f45 6'
+
+        pattern = '\s+' # equivalent to [\t\n\r\f\v]
+        replace = ''
+
+        new_string = re.sub(pattern, replace, string)
+        print(new_string)
+
+        new_string = re.sub(pattern, replace, string, 1)
+        print(new_string)
+
+        > abc12de23f456
+        > abc 12de
+         f45 6
+    -----------------------------------
+
+
+    re.search(pattern, string)
+    - returns the match object the first location if not return None
+    -------------------------------------
+        import re
+
+        string = "Python is fun"
+
+        match = re.search('\APython', string)
+
+        if match:
+            print("pattern found inside the string")
+        else:
+            print("pattern not found")  
+
+        > pattern found inside the string
+    -------------------------------------

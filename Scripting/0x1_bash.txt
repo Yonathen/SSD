@@ -107,7 +107,6 @@
         > A
         > EOF
         10
-- 
 - For loop
     - Syntax
         > for loopname in members
