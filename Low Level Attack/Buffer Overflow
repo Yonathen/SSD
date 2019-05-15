@@ -115,7 +115,7 @@
             - The program reads 300 byte from a file called badfile
             - Then copies it to 100 byte buffer.
             - Cleary there is buffer overflow.
-            - To overflow the pprogram and exploit we can write our
+            - To overflow the program and exploit we can write our
             malicious code on the badfile
         - Setup our experment
             - Disable address randomization
