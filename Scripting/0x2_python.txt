@@ -285,6 +285,11 @@
         replace(old, new, max)
         - replaces all occurances of old in string with new at 
         most with max occurances if max is given.
+        str.join(sequence)
+        - returns the string of elements joined by str separator
+            s = "-"
+            seq = ("a", "b", "c")
+            print(s.join(seq))
     - List methods
         cmp(list1, list2)
         - Compare list1 and list2
