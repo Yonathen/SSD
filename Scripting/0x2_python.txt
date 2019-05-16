@@ -588,6 +588,111 @@
 
         > Can fly
         > Can not fly
+- Python datetime and time.sleep()
+    - Python has a module for datetime
+        import datetime
+
+        dtObj = datetime.datetime.now()
+        print(dtObj)
+        # prints : 2018-12-19 09:26:03.478039
+
+        dtObj = datetime.date.today()
+        print(dtObj)
+        # prints : 2018-12-19
+
+        print (dir (datetime) )
+        # prints : ['MAXYEAR', 'MINYEAR', '__builtins__', 
+        # '__cached__', '__doc__', '__file__', '__loader__', 
+        # '__name__', '__package__', '__spec__', 
+        # '_divide_and_round', 'date', 'datetime', 
+        # 'datetime_CAPI', 'time', 'timedelta', 'timezone', 'tzinfo']
+        #
+        # - dir() function gets a list containing all attribute of module
+
+        d = datetime.date(2019, 4, 13)
+        print(d)
+        # prints : 2019-04-13
+
+    - time.sleep()
+        import time
+
+        print ("Print immediately")
+        time.sleep(2.4)
+        print ("Print after 2.4 seconds...")
+
+        while True:
+            localtime = time.localtime()
+            result = time.strftime("%I:%M:%S %p", localtime)
+            print (result)
+            time.sleep(1)
+        
+        # 02:10:50 PM
+        # 02:10:51 PM
+        # 02:10:52 PM
+        # 02:10:53 PM
+        # ...
+
+    - Multithreading Python
+        - Computer program is a collection of instructions
+        - A process is the execution of those instructions
+        - A thread is a subset of process
+        - A process can have one or more threads
+            import threading
+
+            def print_hello_3_times():
+                for i in range(3):
+                    print ('Hello')
+
+            def print_hi_3_times():
+                for i in range(3):
+                    print ('Hi')
+
+            t1 = threading.Thread(target=print_hello_3_times)
+            t2 = threading.Thread(target=print_hi_3_times)
+
+            t1.start()
+            t2.start()
+
+            Output Can be
+            --------------
+            Hello
+            Hello
+            Hi
+            Hello
+            Hi
+            Hi
+            --------------
+    - time.sleep() in multithreaded programs
+        - sleep() function suspends execution of the current thread
+        - In casse of single-threaded programs, sleep() suspends
+        execution of the thread and process
+        - However, sleep() suspends a thread rather than the whole
+        process in multithreaded programs.
+
+            import threading
+            import time
+
+            def print_hello():
+                for i in range(4):
+                    time.sleep(0.5)
+                    print ("Hello")
+            
+            def print_hi():
+                for i in range(4)
+                    time.sleep(0.7)
+                    print("HI")
+                
+            t1 = threading.Thread(target=print_hello)
+            t2 = threading.Thread(target=print_hi)
+
+            t1.start()
+            t2.start()
+
+
+
+
+
+
 
     
             

