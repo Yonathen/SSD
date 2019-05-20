@@ -10,7 +10,7 @@
         - Extract the machine code and put \x infront
     - Automatically converting machin code to \x form use the 
     following
-        for i in `Objdump -d file_name | tr '\t' ' ' | tr ' ' '\n' | egrep '^[0-9a-f]{2}'`;
+        for i in `Objdump -d file_name | tr '\t' ' ' | tr ' ' '\n' | egrep '^[0-9a-f]{2}$'`;
         do echo -n "\x$i"; done
 - C program for running the shellcode
     #include <stdio.h>
