@@ -134,9 +134,55 @@
                 first.
                 - Therefore the length of the name affect memory location 
                 of environment variable.
+- Function prologue and epilogue
+    - Function prologue
+        - In conventional function callbefore the invocation
+        the caller places the required arguments on the stack.
+            - Then jump to the function.
+            - Once inside the function can get the arguments
+            using the frame pointer ebp.
+        - In return-to-libc the function is not called in a conventional
+        way. we simply cause the target program to jump to the beginning 
+        of the function code.
+            - The arguments are not yet placed
+        - Function prolog has the following three steps.
+            pushl ebp
+            movl esp, ebp
+            subl $N, esp
         
+    - Function epilogue
+        - Executes at the end of the function.
+        - it has also three steps
+            movl ebp, esp
+            popl ebp
+            ret
+- Prepare arguments for system()
+    - The first task is to ditermine where exactly we put the arguments 
+    of the system()
+        - overflow the buffer and change the return address to the 
+        system() function.
+        - Between the return address gets modified and the point 
+        where the argument for system() is used 
+            - the vulnerable function epilogue is executed
+            - first after buffer overflow the return address is changed
+            to the address of the system()
+            - second esp is returned to ebp location
+                - ebp is not need because it will soon replaced
+                by the system esp Value
+                - esp at this stage points right above the return 
+                address.
+            - third is inside the system : after running the function 
+            prologue 
 
-
-
-
-
+        - Therefore our maliciuos code should be designed
+            +-----------------------+
+            | Address of /bin/sh    |
+            +-----------------------+
+            | Address of exit()     |
+            +-----------------------+
+            | Address of system()   |
+            +-----------------------+
+            | AAAAAAAAAAAAA....     |
+            +-----------------------+
+        
+        
