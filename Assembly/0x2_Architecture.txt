@@ -65,7 +65,7 @@ I. SWITCH, TRANSISTORS AND MEMORY
     - 1 double word = 2 words side by side = 32 bits
     - 1 quad word = 2 double words side by side = 64 bits
     - Every byte memory has its own unique address 
-    - When 32-bit computers access a byte it actually reads 4 byts statrting 
+    - When 32-bit computers access a byte it actually reads 4 bytes statrting 
     of the requested byte. You can use the remaining 3 bytes or ignore.
     - If you ignore the 3 bytes, then you will have to access memeory again.
 - Centeral Processing Unit (CPU)
