@@ -221,7 +221,7 @@
         - do the same for num2 by moving it to ebx first
 
         add eax, ebx
-        add eax, 0
+        add eax, '0'
         - add eax and ebx then store the result in eax
         - add '0' to convert it to ascii from decimal
 - Subtraction using SUB 
@@ -240,7 +240,7 @@
         - do the same for num2 by moving it to ebx first
 
         sub eax, ebx
-        sub eax, 0
+        sub eax, '0'
         - sub eax and ebx then store the result in eax
         - sub '0' to convert it to ascii from decimal
         
