@@ -3,7 +3,7 @@
         - To be injected in stack overflow attacks.
     - They are obtained from assembly language.
     - Generating Shellcode
-        - Write what we want the shellcode to in assembly.
+        - Write what we want the shellcode to do in assembly.
         - Perform modifications
         - Convert it to machine code    
             Objdump -D -M intel my_prog
