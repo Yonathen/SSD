@@ -1,1 +1,40 @@
-ghj
+- Pointer
+  - Pointers separates C from other programming languages
+  - Pointer is a variable that stores memory address
+  - Advantages of pointers
+    - pointers are more efficient in handling arrays and structures
+    - we use pointers to get reference of a variable or function
+    - pointers allows dynamic memory allocation
+    - increase execution speed of program
+- Reference operator &
+  - & : gets the memory address of the variable
+  - syntax 
+    &var_name
+- Dereference Operator *
+  - Dereferencing is the process of retriving the value at memory location 
+    pointed by the pointer
+  - Syntax
+    *pointer_variable
+    *memory_address
+- Declaring pointer variable
+  - syntax
+    data-type *pointer-variable-name
+    - data-type is valid C data type
+    - * symbol specifies it is a pointer variable
+  
+    #include <stdio.h>
+    
+    int main()
+    {
+      int num = 10;
+      
+      printf("Value of num = %d\n", num);
+      printf("Address of num = %d\n", &n);
+      printf("Value of num = %d\n", *(&num));
+      
+    }
+
+   
+- Pointer to Constant
+  - Restricts the modification of value pointed by the pointer
+  - 
