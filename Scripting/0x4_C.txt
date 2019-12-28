@@ -28,9 +28,17 @@
     {
       int num = 10;
       
+      int *ptr; // declaration of pointer
+      int *ptr1 = &num; // initialization of pointer variable
+      int *ptr2 = ptr1; // you can also initialize using another pointer variable
+      
       printf("Value of num = %d\n", num);
-      printf("Address of num = %d\n", &n);
-      printf("Value of num = %d\n", *(&num));
+      printf("Address of num = %d\n", &n); // &num gets the address of num
+      printf("Value of num = %d\n", *(&num)); // gets the value pointed by (&num)
+      
+      printf("Value of ptr1 = %x \n", ptr1); //  prints the address of num
+      printf("Address of ptr1 = %x \n", &ptr1); // prints the address of ptr1
+      printf("Value pointed by ptr1 = %d \d", *ptr1); // prints the value of num
       
     }
 
