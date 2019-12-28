@@ -45,4 +45,36 @@
    
 - Pointer to Constant
   - Restricts the modification of value pointed by the pointer
-  - 
+  - But can change the where the pointer points
+  - Syntax
+    const <pointer-type> *<pointer-name>
+  
+    
+- Constant pointer
+  - Pointer variable whose value cannot be altered throughout the program
+  - Doesnt allow modification of its value
+    -  but you can modify value pointed by pointer
+  - Can only point to one object through out the program
+  - Syntax
+    <pointer-type> * const <pointer-name> = <memory-address> 
+- Example
+  #include <stdio.h>
+
+  int main()
+  {
+    int num = 10;
+    int num1 = 100;
+    const int *ptrToConst = &num; // POINTER TO CONSTANT
+    int * const constPtr = num;   // CONSTANT POINTER
+
+    /**** POINTER TO CONSTANT ****/
+    num = 20;                     // DIRECT MODIFICATION IS ALLOWED
+    *ptrToConst = 100;            // NOT ALLOWED
+    ptrToConst = &num1;           // ALLOWED
+
+    /**** CONSTANT POINTER ****/
+    *constPtr = 10                // ALLOWED
+    constPtr = &num1              // NOT ALLOWED
+  }
+    
+    
