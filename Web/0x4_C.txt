@@ -1,0 +1,38 @@
+- Keywords and Indentifiers
+    - goto : is used for unconditional jump
+        if (i == 10)
+            goto error;
+
+        printf("i is not 10");
+        error:
+            printf("Error, i can not be 10.");
+    
+    - sizeof : evaluates the size of data (a variable or a constant)
+        printf("%u bytes.", sizeof(char))
+    
+    - register : register variables much faster than normal variables
+        register int var1;
+    - static : creates static variable
+        static int var;
+    - struct : used for declaring a structure
+        struct student {
+            char name[80];
+            float marks;
+            int age;
+        } s1, s2;
+    - typedef : Keyword is used to explicitly associate type with an 
+    identifier.
+        typedef float kg;
+        kg bear, triger;
+    - union : for grouping different types of variable under a single name.
+        union student {
+            char name[80];
+            float marks;
+            int age;
+        }
+    - volatile : used for creating a volatile objects.
+        - can be modified in an unspecified way by the hardware.
+        - program cannot change it.
+        const volatile number
+- C Variables, Constants and Literals
+    - 
