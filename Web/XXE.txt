@@ -1,0 +1,85 @@
+- Overview
+    - XXE : XML External Entity Injection
+    - XXE occurs when an application allows and input parameter
+    to be XML or incorporated into XML which is passed to an XML
+    parser running with sufficient privileges to include external 
+    or system files.
+- Discovery methodology
+    - Attempt to inject XML or reserved characters into input characters
+        - And observe if XML parsing errors are generated
+- Exploitation
+    - Use information disclosed in error messages to determine at what
+    file path the XML parser is parsing
+    - Cause errors to occur using
+        - malformed XML
+        - XML that stars with whitespace
+        - null characters
+        - XML that doesn't meet xsl specification
+    - try to load files that don't exist in order to determine operating 
+    system type and path at which interpretation is taking place
+
+
+- XML
+    - element nodes: marked-up by tags that contain data
+    - entities: has the ability to have place-holders
+    - predefined entities: xml entities that are already defined on the parser
+        example: 
+            - &lt; : less than : <
+    - developers are also allowed to create their own entities
+    using DTD
+
+- DTD
+    - XML is said to be well formed and valid when its validated against DTD
+    - DTD is to defined the structure and legal elements and attribute of an
+    XML document
+        <!DOCTYPE note [
+            <!ELEMENT note (to, from, heading, body)>
+            <!ELEMENT to (#PCDATA)>
+            <!ELEMENT form (#PCDATA)>
+            <!ELEMENT heading (#PCDATA)>
+            <!ELEMENT body (#PCDATA)>
+        ]>
+    - Entity
+        - &lt; is less than (<)
+        - &gt; is greater than (>)
+        - &amp; is ampersand (&)
+        - &quot; is double quotation (")
+        - &apos; is apostrophe (')
+    
+    - PCDATA 
+        - means parsed character data
+        - data will be parsed by parser
+        - tags inside will be interpreted
+    
+    - CDATA
+        - means character data
+        - will not be interpreted by parser
+    
+    - ELEMENT
+        <!ELEMENT element-name (category)>
+            or
+        <!ELEMENT element-name (element-content)>
+
+        - Empty elements: <!ELEMENT br EMPTY>
+        - Element with Parsed Character Data: <!ELEMENT body (#PCDATA)>
+        - Element with Character Data: <!ELEMENT body (#CDATA)>
+        - Element with any content: <!ELEMENT note ANY>
+        - Element with children(sequential): <!ELEMENT note (to, from, heading, body)>
+        - Element with with one occupance of body: <!ELEMENT note (body)>
+        - Element with with min one occupance of body: <!ELEMENT note (body+)>
+        - Element with with zero or more occupance of body: <!ELEMENT note (body*)>
+        - Element with with zero or one occupance of body: <!ELEMENT note (body?)>
+        - Element with with either body or content: <!ELEMENT note (body|content)>
+
+- Example
+    - Valid XML without entities
+        <?xml version="1.0">
+        <change-log>
+            <text>Hi</text>
+        </change-log>
+    - XML with predefined &quot; entity 
+        <?xml version="1.0">
+        <change-log>
+            <text>&quot; Hello &quot;</text>
+        </change-log>
+    
