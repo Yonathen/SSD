@@ -1,0 +1,80 @@
+- Pointer
+  - Pointers separates C from other programming languages
+  - Pointer is a variable that stores memory address
+  - Advantages of pointers
+    - pointers are more efficient in handling arrays and structures
+    - we use pointers to get reference of a variable or function
+    - pointers allows dynamic memory allocation
+    - increase execution speed of program
+- Reference operator &
+  - & : gets the memory address of the variable
+  - syntax 
+    &var_name
+- Dereference Operator *
+  - Dereferencing is the process of retriving the value at memory location 
+    pointed by the pointer
+  - Syntax
+    *pointer_variable
+    *memory_address
+- Declaring pointer variable
+  - syntax
+    data-type *pointer-variable-name
+    - data-type is valid C data type
+    - * symbol specifies it is a pointer variable
+  
+    #include <stdio.h>
+    
+    int main()
+    {
+      int num = 10;
+      
+      int *ptr; // declaration of pointer
+      int *ptr1 = &num; // initialization of pointer variable
+      int *ptr2 = ptr1; // you can also initialize using another pointer variable
+      
+      printf("Value of num = %d\n", num);
+      printf("Address of num = %d\n", &n); // &num gets the address of num
+      printf("Value of num = %d\n", *(&num)); // gets the value pointed by (&num)
+      
+      printf("Value of ptr1 = %x \n", ptr1); //  prints the address of num
+      printf("Address of ptr1 = %x \n", &ptr1); // prints the address of ptr1
+      printf("Value pointed by ptr1 = %d \d", *ptr1); // prints the value of num
+      
+    }
+
+   
+- Pointer to Constant
+  - Restricts the modification of value pointed by the pointer
+  - But can change the where the pointer points
+  - Syntax
+    const <pointer-type> *<pointer-name>
+  
+    
+- Constant pointer
+  - Pointer variable whose value cannot be altered throughout the program
+  - Doesnt allow modification of its value
+    -  but you can modify value pointed by pointer
+  - Can only point to one object through out the program
+  - Syntax
+    <pointer-type> * const <pointer-name> = <memory-address> 
+- Example
+  #include <stdio.h>
+
+  int main()
+  {
+    int num = 10;
+    int num1 = 100;
+    const int *ptrToConst = &num; // POINTER TO CONSTANT
+    int * const constPtr = num;   // CONSTANT POINTER
+
+    /**** POINTER TO CONSTANT ****/
+    num = 20;                     // DIRECT MODIFICATION IS ALLOWED
+    *ptrToConst = 100;            // NOT ALLOWED
+    ptrToConst = &num1;           // ALLOWED
+
+    /**** CONSTANT POINTER ****/
+    *constPtr = 10                // ALLOWED
+    constPtr = &num1              // NOT ALLOWED
+  }
+    
+    

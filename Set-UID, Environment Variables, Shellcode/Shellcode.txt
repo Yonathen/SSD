@@ -3,7 +3,7 @@
         - To be injected in stack overflow attacks.
     - They are obtained from assembly language.
     - Generating Shellcode
-        - Write what we want the shellcode to in assembly.
+        - Write what we want the shellcode to do in assembly.
         - Perform modifications
         - Convert it to machine code    
             Objdump -D -M intel my_prog
@@ -51,10 +51,13 @@
         - Jump-Call techniques
         - Stack techniques
 - Relative Address Techniques 
-    - Current location to RIP register
+    - Relative address is the current location relative to RIP register
     - Relative address is useful to avoid using hard coded address
     - The syntax is
         lea <dest.>, [rel <src>]
+        - rel instruction will compute the address of the source relative to rip
+        register
+        - 
 
     example
         _start:
